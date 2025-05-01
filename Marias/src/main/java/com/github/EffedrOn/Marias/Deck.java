@@ -1,4 +1,5 @@
 package com.github.EffedrOn.Marias;
 
-public class Deck implements DeckInterface{
+public class Deck implements DeckInterface {
+
 }

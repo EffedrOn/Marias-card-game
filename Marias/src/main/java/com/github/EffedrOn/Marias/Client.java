@@ -1,4 +1,6 @@
 package com.github.EffedrOn.Marias;
 
-public class Client implements ClientInterface {
+public interface Client {
+    // Every player (also bot) should implement this interface
+
 }
