@@ -1,7 +1,7 @@
 package com.github.EffedrOn.Marias;
 
 public interface LicitatorInterface {
-    void raise(int val);
+    void raise();
     void switchTypeGame(String type);
     void licitate();
 }

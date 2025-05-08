@@ -1,6 +1,6 @@
 package com.github.EffedrOn.Marias;
 
-public interface StychInterface {
+public interface TrickInterface {
     int getValue();
     void reset();
 }
