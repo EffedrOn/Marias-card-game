@@ -1,11 +1,12 @@
 package com.github.EffedrOn.Marias.DeckOfCards;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Deck implements DeckInterface {
     //private Card[] cards = new Card[32]; mozno bude lepsie spravit pole uvidime
-    private List<Card> cards;
+    private final List<Card> cards;
 
     public Deck() {
         cards = new ArrayList<>();
@@ -14,6 +15,12 @@ public class Deck implements DeckInterface {
                 cards.add(new Card(rank, suit));
             }
         }
+        /*
+        // printout of cards in deck
+        for (Card card : cards) {
+            System.out.println(card);
+        }
+        */
     }
     @Override
     public Card[] deal() {
@@ -28,8 +35,9 @@ public class Deck implements DeckInterface {
     @Override
     public void shuffle() {
         // shuffle the deck of cards randomly.
-        // v mariasi sa ale naozaj nemiesaju karty
+        // v mariasi sa ale naozaj nemiesaju karty nazaciatku vsak musia byt randomne
         //Collection.shuffle(cards); toto nefunguje
+        Collections.shuffle(cards);
 
     }
     @Override

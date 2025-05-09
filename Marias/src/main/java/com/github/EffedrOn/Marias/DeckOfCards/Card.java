@@ -25,7 +25,10 @@ public class Card {
     public static final int leaves = 0;
 
     public static final String[] RANK_SYMBOLS = { "7", "8", "9", "D", "H", "K", "10", "A" };
-    public static final char[] SUIT_SYMBOLS = {'L', 'A', 'B', 'H' };
+    //public static final char[] SUIT_SYMBOLS = {'♠', '♣', '♦', '♥' };
+    public static final String[] SUIT_SYMBOLS = {"🍃","🌰", "⚫", "❤️"  };
+                                            // list, zalud, gula, cerven
+    // Tu by som mohol vytvorit miesto emoji a stringu oznacujuceho typ karty cele ascii art kariet
 
     private final int rank;
     private final int  suit;
@@ -46,6 +49,7 @@ public class Card {
     public int getSuit() {
         return suit;
     }
+
     @Override
     public String toString() {
         return RANK_SYMBOLS[rank] + SUIT_SYMBOLS[suit];
