@@ -1,7 +1,6 @@
 package com.github.EffedrOn.Marias;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
-import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
 import com.github.EffedrOn.Marias.DeckOfCards.Deck;
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.BotPlayer;
@@ -25,11 +24,19 @@ public class Table implements TableInterface {
     public Table(IOHandler ioHandler) {
         System.out.println("Table created");
         this.ioHandler = ioHandler;
-        player1 = new HumanPlayer("Human", this.ioHandler);
-        player2 = new BotPlayer("Bot1", this.ioHandler);
-        player3 = new BotPlayer("Bot2", this.ioHandler);
-        players = new Player[]{player1, player2, player3};
-        deck = new Deck();
+
+        this.player1 = new HumanPlayer("Human", this.ioHandler);
+        this.player2 = new BotPlayer("Bot1", this.ioHandler);
+        this.player3 = new BotPlayer("Bot2", this.ioHandler);
+
+        ioHandler.printMessage("Human player created");
+        ioHandler.printMessage("Bot1 player created");
+        ioHandler.printMessage("Bot2 player created");
+
+        this.players = new Player[]{player1, player2, player3};
+        this.deck = new Deck();
+        ioHandler.printMessage("Deck created");
+
         playerOnMove = 0;            // Zatial bude zacinat vzdy human player
         licitator = new Licitator(); // tu si budu hraci vyberat typ hry a sadzbu
     }
@@ -38,9 +45,11 @@ public class Table implements TableInterface {
         // deal cards to players
         // will call the deal from the deck class
         // It should be somehow marked which player deals the cards.
+        ioHandler.printMessage("Dealing Cards");
         for (Player player : players) {
             player.setCards(deck.deal());
         }
+
         /*
         // Printout of dealed cards to players
         for (Player player : players) {
@@ -55,16 +64,10 @@ public class Table implements TableInterface {
     }
 
     public void playTrick() {
-        // The player who wins the trick should start the new one.
         Trick trick = new Trick();
-        //Player firstPlayer = players[playerOnMove];
-
-        Card[] playedCards = new Card[3];
-        int[] playerIndexes = new int[3];
 
         // play one round
         for (int i = 0; i < players.length; i++) {
-            //int playerIndex = (playerOnMove + i) % 3;
             Player currentPlayer = players[playerOnMove];
 
             if (currentPlayer instanceof HumanPlayer) {
@@ -73,39 +76,47 @@ public class Table implements TableInterface {
             }
 
             Card card = currentPlayer.playCard();
-            playedCards[i] = card;
-            playerIndexes[i] = playerOnMove;
+
+            // Check if the card which currentPlayer played is really correct by rules
+            boolean correctlyPlayedCard = false;
+            while (!correctlyPlayedCard) {
+                correctlyPlayedCard = checkPlayedCard(currentPlayer.getHand(), card, trick);
+            }
 
             ioHandler.printMessage(currentPlayer.name + " played: " + card);
-            trick.cards[i] = card;
+            trick.addCard(card, playerOnMove);
 
+            // Set the playerOnMove for the next one in order
             rotatePlayers();
         }
 
         // Determine winner
-        CardComparator comparator = new CardComparator(trump.getSuit());
-        int winningCardIndex = 0;
+        int winnerPlayerIndex = trick.getWinnerPlayerIndex(trump);
+        Player winner = players[winnerPlayerIndex];
 
-        for (int i = 1; i < playedCards.length; i++) {
-            if (comparator.compare(playedCards[i], playedCards[winningCardIndex]) < 0) {
-                winningCardIndex = i;
-            }
-        }
+        // The player who wins the trick should start the new one.
+        setPlayerOnMove(winner);
 
-       Player winner = players[playerIndexes[winningCardIndex]];
+        ioHandler.printMessage(players[playerOnMove].name + " wins the trick!");
+        ioHandler.printMessage("Trick value: " + trick.getValue());
+        ioHandler.printMessage("----------------------------------");
+        //trick.reset(); // Not needed because every new time playTrick is called new instance of trick is created
+    }
 
-        // could store trick points to the winner here
+    private void setPlayerOnMove(Player winner) {
         for (int i = 0; i < players.length; i++) {
             if (players[i] == winner) {
                 playerOnMove = i;
                 break;
             }
         }
+    }
 
-        ioHandler.printMessage(players[playerOnMove].name + " wins the trick!");
-        ioHandler.printMessage("Trick value: " + trick.getValue());
-        ioHandler.printMessage("----------------------------------");
-        trick.reset();
+    // Check if the card played by a player corresponds to rules of the game(color) for now on
+    private boolean checkPlayedCard(Hand hand, Card card, Trick trick) {
+        // ak mam vyssiu kartu musim prebit cely trick
+        // ajkeby som nechcel prebit tromfom tak musim
+        return true;
     }
 
     public void rotatePlayers() {
@@ -114,8 +125,7 @@ public class Table implements TableInterface {
 
     public void chooseTrump() {
         Player p = players[playerOnMove];
-        Card c = p.chooseTrump();
-        this.trump = c;
+        this.trump = p.chooseTrump();
     }
 
     public boolean end() {
@@ -134,4 +144,5 @@ public class Table implements TableInterface {
     public Card getTrump() {
         return this.trump;
     }
+
 }
