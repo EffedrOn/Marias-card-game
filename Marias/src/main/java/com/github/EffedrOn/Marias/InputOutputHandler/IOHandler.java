@@ -16,11 +16,13 @@ public class IOHandler implements IOHandlerInterface {
     public String readInput() {
         return scanner.nextLine();
     }
+
     public void printHand(Hand hand) {
         for (int i = 0; i < hand.getCards().size(); i++) {
             Card c = hand.getCards().get(i);
             System.out.print("| " + c.toString());
         }
+
         System.out.print(" |");
         System.out.println();
     }

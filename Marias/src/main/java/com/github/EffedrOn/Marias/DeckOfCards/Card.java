@@ -43,6 +43,7 @@ public class Card {
         this.rank = rank;
         this.suit = suit;
     }
+
     public int getRank() {
         return rank;
     }
@@ -54,5 +55,6 @@ public class Card {
     public String toString() {
         return RANK_SYMBOLS[rank] + SUIT_SYMBOLS[suit];
     }
+
 
 }

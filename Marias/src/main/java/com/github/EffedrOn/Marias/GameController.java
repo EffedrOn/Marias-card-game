@@ -9,18 +9,21 @@ public class GameController {
     // Next players choose the type of game they will play.
     private final Table table;
     private final IOHandler ioHandler;
+    //  mozno by mala byt instancia comparatoru tu
+    // 2 comparatory jeden pre farbu druhy pre maly a velky
     public GameController() {
         this.ioHandler = new IOHandler();
         this.table = new Table(ioHandler);
     }
-
+    // Tu by mohla byt funkcia ktora by bola zodpovedna za to aky typ hry sa hra (Farba, Maly, Velky)
     public void startGame() {
         table.shuffleCards();
         table.dealCards();
         table.chooseTrump();
+
         while (true) {
-            table.playTrick(); // toto presunut asi do gamecontrolleru
-            table.rotatePlayers();
+            table.playTrick(); // logiku tohto presunut asi do gamecontrolleru
+
             if (table.end()) {
                 ioHandler.printMessage("End of game");
                 break;// end the while loop

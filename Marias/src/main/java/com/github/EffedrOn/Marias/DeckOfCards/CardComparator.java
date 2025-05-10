@@ -16,6 +16,7 @@ public class CardComparator implements Comparator<Card> {
         if (isTriumph1 && !isTriumph2) return -1; // triumph wins
         if (!isTriumph1 && isTriumph2) return 1;
 
+        // pridat ze ak niesu rovnakej farby vzdy vyhrava farba ktora bola vylozena prvym hracom na tahu
         // Same suit (or neither trump), compare rank
         return Integer.compare(o2.getRank(), o1.getRank()); // higher rank wins
     }

@@ -10,11 +10,13 @@ public class Hand implements HandInterface{
     public Hand() {
         this.cards = new ArrayList<>();
     }
+
     public void addCards(Card[] cards){
         for(Card card : cards){
             this.cards.add(card);
         }
     }
+
     public void removeCard(Card card) {
         this.cards.remove(card);
     }
@@ -26,6 +28,7 @@ public class Hand implements HandInterface{
         if (cards.isEmpty()) {
             return null; // or throw an exception, depending on your needs
         }
+
         Random random = new Random();
         int index = random.nextInt(cards.size());
         return cards.get(index);

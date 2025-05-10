@@ -22,6 +22,7 @@ public class Deck implements DeckInterface {
         }
         */
     }
+
     @Override
     public Card[] deal() {
         // Deal a 3 packs of cards (one for every player), the first player (one that is choosing the trump) gets 12 cards, but only 7 of them are visible and 5
@@ -32,14 +33,15 @@ public class Deck implements DeckInterface {
         }
         return hand;
     }
+
     @Override
     public void shuffle() {
         // shuffle the deck of cards randomly.
         // v mariasi sa ale naozaj nemiesaju karty nazaciatku vsak musia byt randomne
         //Collection.shuffle(cards); toto nefunguje
         Collections.shuffle(cards);
-
     }
+
     @Override
     public void takeOutCard() {
         if (!cards.isEmpty()) {
