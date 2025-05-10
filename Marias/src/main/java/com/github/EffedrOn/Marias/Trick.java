@@ -48,7 +48,46 @@ public class Trick {
             }
         }
         return playerIndexes[winningCardIndex];
-
     }
+
+    public Card getFirstCard() {
+        return cards[0];
+    }
+
+    public int getFirstCardSuit() {
+        return cards[0].getSuit();
+    }
+
+    // Get highest card so far in the trick of the given suit
+    public Card getHighestCardOfSuit(int suit, Card trump) {
+        Card highest = null;
+        CardComparator comparator = new CardComparator(trump.getSuit());
+
+        for (Card c : cards) {
+            if (c != null && c.getSuit() == suit) {
+                if (highest == null || comparator.compare(c, highest) < 0) {
+                    highest = c;
+                }
+            }
+        }
+        return highest;
+    }
+
+    // Get highest card in the trick overall
+    public Card getHighestCard(Card trump) {
+        Card highest = null;
+        CardComparator comparator = new CardComparator(trump.getSuit());
+
+        for (Card c : cards) {
+            if (c != null) {
+                if (highest == null || comparator.compare(c, highest) < 0) {
+                    highest = c;
+                }
+            }
+        }
+        return highest;
+    }
+
+
 
 }

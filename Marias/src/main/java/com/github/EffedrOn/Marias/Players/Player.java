@@ -29,4 +29,8 @@ public abstract class Player implements PlayerInterface {
     public Hand getHand() {
         return hand;
     }
+
+    public void confirmPlayedCard(Card card) {
+        hand.removeCard(card);  // Only remove after successful validation
+    }
 }

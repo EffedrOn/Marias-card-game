@@ -26,7 +26,7 @@ public class HumanPlayer extends Player {
         ioHandler.printMessage("Choose card index to play:");
         int idx = Integer.parseInt(ioHandler.readInput());
         Card chosen = hand.getCards().get(idx);
-        hand.removeCard(chosen);
+        //hand.removeCard(chosen);
         return chosen;
     }
 

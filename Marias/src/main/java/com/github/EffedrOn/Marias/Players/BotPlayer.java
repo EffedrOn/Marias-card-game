@@ -22,9 +22,12 @@ public class BotPlayer extends Player {
     public Card playCard() {
         Random rand = new Random();
         List<Card> cards = hand.getCards();
+        if (cards.isEmpty()) {
+            throw new IllegalStateException(name + " has no cards to play.");
+        }
         int idx = rand.nextInt(cards.size());
         Card chosen = cards.get(idx);
-        hand.removeCard(chosen);
+        //hand.removeCard(chosen);
         return chosen;
     }
 

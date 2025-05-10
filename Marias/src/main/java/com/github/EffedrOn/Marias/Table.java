@@ -1,11 +1,14 @@
 package com.github.EffedrOn.Marias;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
+import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
 import com.github.EffedrOn.Marias.DeckOfCards.Deck;
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.BotPlayer;
 import com.github.EffedrOn.Marias.Players.HumanPlayer;
 import com.github.EffedrOn.Marias.Players.Player;
+
+import java.util.List;
 
 public class Table implements TableInterface {
     // This class should handle the logic that is taking place on the "table" of the game
@@ -81,7 +84,15 @@ public class Table implements TableInterface {
             boolean correctlyPlayedCard = false;
             while (!correctlyPlayedCard) {
                 correctlyPlayedCard = checkPlayedCard(currentPlayer.getHand(), card, trick);
+                if (!correctlyPlayedCard) {
+                    if( currentPlayer instanceof HumanPlayer ) {
+                        ioHandler.printMessage( "Stop cheating!"); // for now only human is printed to pick new index, bots should be designed in a way not to randomly pick index until they get the correct one
+                    }
+                    card = currentPlayer.playCard();
+                }
             }
+            // remove the played card from hand of player
+            currentPlayer.confirmPlayedCard(card);
 
             ioHandler.printMessage(currentPlayer.name + " played: " + card);
             trick.addCard(card, playerOnMove);
@@ -116,6 +127,57 @@ public class Table implements TableInterface {
     private boolean checkPlayedCard(Hand hand, Card card, Trick trick) {
         // ak mam vyssiu kartu musim prebit cely trick
         // ajkeby som nechcel prebit tromfom tak musim
+        if (trick.getFirstCard() == null) {
+            return true; // First to play, no rules apply
+        }
+        int firstSuit = trick.getFirstCardSuit();
+        int trumpSuit = trump.getSuit();
+        List<Card> playerCards = hand.getCards();
+
+        boolean hasSameSuit = false;
+        boolean hasHigherSameSuit = false;
+        boolean hasTrump = false;
+
+        Card highestSameSuit = trick.getHighestCardOfSuit(firstSuit, trump);
+        Card highestOverall = trick.getHighestCard(trump);
+        CardComparator comparator = new CardComparator(trumpSuit);
+
+        for (Card c : playerCards) {
+            if (c.getSuit() == firstSuit) {
+                hasSameSuit = true;
+                if (comparator.compare(c, highestSameSuit) < 0) {
+                    hasHigherSameSuit = true;
+                }
+            }
+            if (c.getSuit() == trumpSuit) {
+                hasTrump = true;
+            }
+        }
+
+        // Rule 1: Must follow suit
+        if (hasSameSuit && card.getSuit() != firstSuit) {
+            return false;
+        }
+
+        // Rule 2: If has higher card in same suit than current highest of that suit → must use it
+        if (card.getSuit() == firstSuit && hasHigherSameSuit) {
+            if (comparator.compare(card, highestSameSuit) >= 0) {
+                return false; // Played lower card while having higher
+            }
+        }
+
+        // Rule 3: If can't follow suit and can win with trump, must do it
+        boolean playedTrump = card.getSuit() == trumpSuit;
+        boolean canWinWithTrump = false;
+        for (Card c : playerCards) {
+            if (c.getSuit() == trumpSuit && comparator.compare(c, highestOverall) < 0) {
+                canWinWithTrump = true;
+            }
+        }
+        if (!hasSameSuit && canWinWithTrump && !playedTrump) {
+            return false; // Had winning trump but didn't use it
+        }
+
         return true;
     }
 
