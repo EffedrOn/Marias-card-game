@@ -1,0 +1,6 @@
+1. presunut logiku z playedCards a playerIndexes do tricku.
+2. Naimplementovat checkPlayerCard ktora bude checkovat ci hrac zahral kartu v sulade s pravidlami.
+3. Zkompaktnit vypisy v ioHandlery, aby som nemusel volat len printMessagge ale komplexnejsie metody.
+4. Porozdelovat metodu playTrick v Table aby nebola tak neunosne dlha ale radsej volala viacej mensich funkcii. Asi prave play one round by mohla byt jedna metoda.
+   Dalsia tiez na rozhodnutie kto vyhral stych.
+5.  
