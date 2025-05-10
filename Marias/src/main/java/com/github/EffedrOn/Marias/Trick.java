@@ -2,6 +2,7 @@ package com.github.EffedrOn.Marias;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
+import com.github.EffedrOn.Marias.Players.Player;
 
 public class Trick {
     Card[] cards = new Card[3];
@@ -35,4 +36,19 @@ public class Trick {
     public void reset() {
         cards = new Card[3];
     }
+
+    public int getWinnerPlayerIndex(Card trump) {
+        // Determine winner
+        CardComparator comparator = new CardComparator(trump.getSuit());
+        int winningCardIndex = 0;
+
+        for (int i = 1; i < cards.length; i++) {
+            if (comparator.compare(cards[i], cards[winningCardIndex]) < 0) {
+                winningCardIndex = i;
+            }
+        }
+        return playerIndexes[winningCardIndex];
+
+    }
+
 }
