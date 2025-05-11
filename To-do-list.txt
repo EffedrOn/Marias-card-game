@@ -3,4 +3,5 @@
 3. Zkompaktnit vypisy v ioHandlery, aby som nemusel volat len printMessagge ale komplexnejsie metody.
 4. Porozdelovat metodu playTrick v Table aby nebola tak neunosne dlha ale radsej volala viacej mensich funkcii. Asi prave play one round by mohla byt jedna metoda.
    Dalsia tiez na rozhodnutie kto vyhral stych.
-5.  
+5. Dorobit spravne rozdavanie: 1. hrac 7 kariet a 5 bokom, nasledne zahodit 2 do talona, 2. hrac 12 kariet a rovnako aj 3. hrac.
+6. Dorobit porovnavanie kariet ked niesu rovnakej farby, trumfove atd.
