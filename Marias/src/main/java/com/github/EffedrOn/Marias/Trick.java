@@ -74,6 +74,7 @@ public class Trick {
     }
 
     // Get highest card in the trick overall
+    // Treba zohladnit ze najsilnejsie su trumfy
     public Card getHighestCard(Card trump) {
         Card highest = null;
         CardComparator comparator = new CardComparator(trump.getSuit());

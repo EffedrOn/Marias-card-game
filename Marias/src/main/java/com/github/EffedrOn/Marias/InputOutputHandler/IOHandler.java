@@ -26,4 +26,17 @@ public class IOHandler implements IOHandlerInterface {
         System.out.print(" |");
         System.out.println();
     }
+
+    // Maybe it will be better to use this function instead
+    public int readInt(String prompt) {
+        while (true) {
+            printMessage(prompt);
+            try {
+                return Integer.parseInt(readInput());
+            } catch (NumberFormatException e) {
+                printMessage("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
 }

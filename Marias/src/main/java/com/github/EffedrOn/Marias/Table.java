@@ -45,14 +45,17 @@ public class Table implements TableInterface {
     }
 
     public void dealCards() {
+        // Prvy hrac(Human) dostane 7 kariet a dalsich 5 nevidi, zo 7 vyberie trumf potom zo vsetkych 12 vyhodi 2 do talonu
+        // Dalsi hraci dostanu po 10 kariet.
         // deal cards to players
         // will call the deal from the deck class
         // It should be somehow marked which player deals the cards.
         ioHandler.printMessage("Dealing Cards");
-        for (Player player : players) {
-            player.setCards(deck.deal());
-        }
 
+        player1.setCards(deck.deal(7));
+        player2.setCards(deck.deal(10));
+        player3.setCards(deck.deal(10));
+        // After this player1 should get the remaining 5 cards
         /*
         // Printout of dealed cards to players
         for (Player player : players) {
@@ -64,6 +67,68 @@ public class Table implements TableInterface {
             }
         }
          */
+    }
+
+    public void dealFirstPlayer() {
+        player1.setCards(deck.deal(5));
+    }
+
+    public void throwAwayCards() {
+        List<Card> cards = player1.getHand().getCards();
+        ioHandler.printMessage("Your hand (choose 2 cards to throw away):");
+        ioHandler.printHand(player1.getHand());
+
+        int firstIndex = -1;
+        int secondIndex = -1;
+
+        while (true) {
+            try {
+                ioHandler.printMessage("Enter index of the FIRST card to throw away:");
+                firstIndex = Integer.parseInt(ioHandler.readInput());
+
+                ioHandler.printMessage("Enter index of the SECOND card to throw away:");
+                secondIndex = Integer.parseInt(ioHandler.readInput());
+
+                if (firstIndex == secondIndex) {
+                    ioHandler.printMessage("You cannot throw away the same card twice.");
+                    continue;
+                }
+
+                if (firstIndex < 0 || firstIndex >= cards.size() || secondIndex < 0 || secondIndex >= cards.size()) {
+                    ioHandler.printMessage("Invalid indexes. Please enter valid card indexes.");
+                    continue;
+                }
+
+                Card firstCard = cards.get(firstIndex);
+                Card secondCard = cards.get(secondIndex);
+
+                // Check if any card is Ace or 10
+                if (isHighValueCard(firstCard) || isHighValueCard(secondCard)) {
+                    ioHandler.printMessage("You cannot throw away an Ace or a 10. Pick different cards.");
+                    continue;
+                }
+                break; // input is valid
+            } catch (NumberFormatException e) {
+                ioHandler.printMessage("Please enter valid numbers.");
+            }
+        }
+
+        // Remove higher index first to avoid shifting
+        if (firstIndex > secondIndex) {
+            cards.remove(firstIndex);
+            cards.remove(secondIndex);
+        } else {
+            cards.remove(secondIndex);
+            cards.remove(firstIndex);
+        }
+
+        ioHandler.printMessage("Two cards have been thrown away.");
+    }
+
+    private boolean isHighValueCard(Card card) {
+        int rank = card.getRank();
+        // Assuming Ace = 14, Ten = 10 (adjust if your game uses different values)
+        return rank == Card.ACE || rank == Card.TEN;
     }
 
     public void playTrick() {
@@ -149,6 +214,7 @@ public class Table implements TableInterface {
                     hasHigherSameSuit = true;
                 }
             }
+
             if (c.getSuit() == trumpSuit) {
                 hasTrump = true;
             }
@@ -166,7 +232,8 @@ public class Table implements TableInterface {
             }
         }
 
-        // Rule 3: If can't follow suit and can win with trump, must do it
+        // Rule 3: If can't follow suit and has trump, must do it
+        // musi zahrat trumf ajkeby nim nevyhra stych pretoze uz dal niekto silnejsi trumf
         boolean playedTrump = card.getSuit() == trumpSuit;
         boolean canWinWithTrump = false;
         for (Card c : playerCards) {
@@ -174,8 +241,13 @@ public class Table implements TableInterface {
                 canWinWithTrump = true;
             }
         }
+
         if (!hasSameSuit && canWinWithTrump && !playedTrump) {
             return false; // Had winning trump but didn't use it
+        }
+
+        if (!hasSameSuit && hasTrump && !playedTrump) {
+            return false; // Had trump but didnt confess it
         }
 
         return true;
