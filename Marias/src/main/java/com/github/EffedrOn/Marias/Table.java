@@ -156,6 +156,7 @@ public class Table implements TableInterface {
                     card = currentPlayer.playCard();
                 }
             }
+
             // remove the played card from hand of player
             currentPlayer.confirmPlayedCard(card);
 
@@ -190,6 +191,9 @@ public class Table implements TableInterface {
 
     // Check if the card played by a player corresponds to rules of the game(color) for now on
     private boolean checkPlayedCard(Hand hand, Card card, Trick trick) {
+        // Ak uz hrac predomnou prebil stych trumfom nemusim zahrat vyssiu kartu ako je prva karta v stychu, pretoze ajtak by som nevyhral
+        // Farbu vsak musim priznat vzdy ajkeby som stych nemal vyhrat
+        // Ak nemam ako prebit stych ale mam vyssiu kartu ako druha najvyssia v stychu nemusim zahrat prave ju
         // ak mam vyssiu kartu musim prebit cely trick
         // ajkeby som nechcel prebit tromfom tak musim
         if (trick.getFirstCard() == null) {
@@ -278,5 +282,4 @@ public class Table implements TableInterface {
     public Card getTrump() {
         return this.trump;
     }
-
 }

@@ -38,17 +38,31 @@ public class Trick {
     }
 
     public int getWinnerPlayerIndex(Card trump) {
-        // Determine winner
-        CardComparator comparator = new CardComparator(trump.getSuit());
+        int trumpSuit = trump.getSuit();
+        int firstSuit = getFirstCardSuit();
+
         int winningCardIndex = 0;
+        Card winningCard = cards[0];
+
+        CardComparator comparator = new CardComparator(trumpSuit);
 
         for (int i = 1; i < cards.length; i++) {
-            if (comparator.compare(cards[i], cards[winningCardIndex]) < 0) {
+            Card current = cards[i];
+
+            boolean isTrump = current.getSuit() == trumpSuit;
+            boolean isSameSuitAsFirst = current.getSuit() == firstSuit;
+
+            if (!isTrump && !isSameSuitAsFirst) continue; // Skip invalid (off-suit non-trump) cards
+
+            if (comparator.compare(current, winningCard) < 0) {
+                winningCard = current;
                 winningCardIndex = i;
             }
         }
+
         return playerIndexes[winningCardIndex];
     }
+
 
     public Card getFirstCard() {
         return cards[0];
