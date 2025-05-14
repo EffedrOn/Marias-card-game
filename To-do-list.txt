@@ -7,4 +7,5 @@
 6. Dorobit porovnavanie kariet ked niesu rovnakej farby, trumfove atd. 
 7. Doriesit aby program neodletel na zlom inpute uzivatela.
 8. Dorobit ze ak hrac vylozil kartu ktora nie je rovnakej farby ako prva vylozena -> nemoze vyhrat stych.
+9. Skusit upravit bota tak aby predtym ako zahra kartu previedol jednoduchu logiku ci sa mu to oplati alebo nie, a ake karty moze vobec zahrat.
 
