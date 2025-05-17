@@ -3,6 +3,12 @@ package com.github.EffedrOn.Marias;
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
 
+/**
+ * Trick represents cards played by all 3 players in one round.
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class Trick {
     Card[] cards = new Card[3];
     public int[] playerIndexes  = new int[3];
@@ -30,10 +36,6 @@ public class Trick {
             case Card.TEN -> 10;
             default -> 0;
         };
-    }
-
-    public void reset() {
-        cards = new Card[3];
     }
 
     public int getWinnerPlayerIndex(Card trump) {

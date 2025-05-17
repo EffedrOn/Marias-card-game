@@ -3,6 +3,13 @@ package com.github.EffedrOn.Marias.Players;
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 
+/**
+ * Human player is player that interacts with CLI
+ * It is first player that is asked to choose trump, throw away cards and play first card of first trick.
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class HumanPlayer extends Player {
     // HumanPlayer should communicate through the CLI in which he will enter the actions he wants to play when he is on move
 

@@ -4,12 +4,19 @@ import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.Hand;
 import com.github.EffedrOn.Marias.Players.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// It would be good to always show the player what color is triumph because its easy to forget.
+/**
+ * Class handling reading and writing with scanner.
+ * User Interface and its visual design is mainly being constructed by this class.
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class IOHandler implements IOHandlerInterface {
-    // Should have methods that will be preimplented which mesagge it will printout
+    // It would be good to always show the player what color is triumph because its easy to forget.
     private final Scanner scanner;
 
     public IOHandler() {
@@ -36,7 +43,7 @@ public class IOHandler implements IOHandlerInterface {
     }
 
     public void printPrompt(String message) {
-        print("> " + message + ": ");
+        println("> " + message + ": ");
     }
 
     public void printPlayedCard(Player player, Card card) {
@@ -62,14 +69,50 @@ public class IOHandler implements IOHandlerInterface {
 
 
     public void printHand(Hand hand) {
-        // Tu by chcelo este dorobit vypis indexov nad alebo pod vypisanymi kartami
+        List<Card> cards = hand.getCards();
+
+        StringBuilder indexLine = new StringBuilder();
+        StringBuilder cardLine = new StringBuilder();
+
+        List<Integer> cardWidths = new ArrayList<>();
+
+        List<String> formattedCards = new ArrayList<>();
+        for (Card card : cards) {
+            String cardStr = card.toString();
+            String formatted = "| " + cardStr + " ";
+            formattedCards.add(formatted);
+            cardWidths.add(formatted.length());
+        }
+
+        int currentPos = 0;
+        for (int i = 0; i < formattedCards.size(); i++) {
+            String card = formattedCards.get(i);
+            int width = cardWidths.get(i);
+            cardLine.append(card);
+
+            int indexPos = currentPos + width / 2 - String.valueOf(i).length() / 2;
+            while (indexLine.length() < indexPos) {
+                indexLine.append(" ");
+            }
+            indexLine.append(i);
+
+            currentPos += width;
+        }
+
+        cardLine.append("|");
+
+        System.out.println(indexLine.toString());
+        System.out.println(cardLine.toString());
+        /*
         for (int i = 0; i < hand.getCards().size(); i++) {
             Card c = hand.getCards().get(i);
             System.out.print("| " + c.toString());
         }
 
-        System.out.print(" |");
+        System.out.print("|");
         System.out.println();
+
+         */
     }
 
 

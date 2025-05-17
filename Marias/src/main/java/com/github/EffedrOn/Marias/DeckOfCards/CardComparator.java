@@ -1,6 +1,13 @@
 package com.github.EffedrOn.Marias.DeckOfCards;
 import java.util.Comparator;
 
+/**
+ * Comparator that ensures order on card objects
+ * Comparision depends on suit, turmp suit value of card
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class CardComparator implements Comparator<Card> {
     private final int trumpSuit;
 

@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Deck of cards, which can be shuffled, from which cards are dealed.
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class Deck implements DeckInterface {
-    //private Card[] cards = new Card[32]; mozno bude lepsie spravit pole uvidime
     private final List<Card> cards;
 
     public Deck() {
@@ -15,6 +20,7 @@ public class Deck implements DeckInterface {
                 cards.add(new Card(rank, suit));
             }
         }
+
         /*
         // printout of cards in deck
         for (Card card : cards) {
@@ -39,7 +45,6 @@ public class Deck implements DeckInterface {
     public void shuffle() {
         // shuffle the deck of cards randomly.
         // v mariasi sa ale naozaj nemiesaju karty nazaciatku vsak musia byt randomne
-        //Collection.shuffle(cards); toto nefunguje
         Collections.shuffle(cards);
     }
 

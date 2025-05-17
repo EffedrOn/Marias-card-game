@@ -1,5 +1,11 @@
 package com.github.EffedrOn.Marias.DeckOfCards;
 
+/**
+ * Class for cards of the game
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class Card {
     // German/Bohemian cards
     // Card values depend on type of game that is played

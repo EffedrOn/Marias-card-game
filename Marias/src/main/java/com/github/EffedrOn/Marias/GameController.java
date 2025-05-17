@@ -5,12 +5,15 @@ import com.github.EffedrOn.Marias.Players.BotPlayer;
 import com.github.EffedrOn.Marias.Players.HumanPlayer;
 import com.github.EffedrOn.Marias.Players.Player;
 
-// Mozno si drzat trump kartu radsej tu ako v Table
+/**
+ * Class responsible for whole game logic, that decides who is on turn
+ * This class handle main game logic.
+ * Here players and table lives.
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class GameController {
-    // Class responsible for whole game logic, that decides who is on turn...
-    // This class should handle all game logic like who is on turn, who wins and so on
-    // The players should be dealed cards at the beggining.
-    // Next players choose the type of game they will play.
     private final Table table;
     private final IOHandler ioHandler;
 
@@ -18,9 +21,11 @@ public class GameController {
     private final Player player2;
     private final Player player3;
 
-    //  mozno by mala byt instancia comparatoru tu
-    // 2 comparatory jeden pre farbu druhy pre maly a velky
+    // mozno by mala byt instancia comparatoru tu
 
+    /**
+     * Constructor
+     */
     public GameController() {
         this.ioHandler = new IOHandler();
 
@@ -37,12 +42,22 @@ public class GameController {
     }
 
     // Tu by mohla byt funkcia ktora by bola zodpovedna za to aky typ hry sa hra (Farba, Maly, Velky)
+
+    /**
+     * Starting the game in which deck of cards is shuffled
+     * Then cards are dealed
+     * First player chooses trump of game, then he throw away 2 cards
+     * Then the rounds of tricks are played until every player has empty hand (no card)
+     * Then total winner of game is decided.
+     */
     public void startGame() {
+        // Players should choose what value will the game be
         table.shuffleCards();
+        // Tu by este mal mat prvy hrac moznost "prelozit" balik
         table.dealCards();  // Z reality je to tak ze asi sa rozdava na 2x najprv dostanu hraci po 5 kariet a human 7, nasledne dostanu vsetci dalsich 5
 
         table.chooseTrump(); // Mozno este pridat ze hrac moze zavolit z ludu, t.j ze vyberie sa random karta z talonu 5 kariet rozdanych v dealFirstPlayer()
-        table.dealFirstPlayer();
+        table.dealFirstPlayer(); // Deal first player rest of the cards
 
         // Ask First player to choose 2 cards to throw away
         table.throwAwayCards();
@@ -52,7 +67,6 @@ public class GameController {
 
             if (table.end()) {
                 ioHandler.printMessage("End of game");
-                // Tu treba rozhodnut kto vyhral hru
 
                 int player1Score = this.player1.countTricks();
                 int  player2Score = this.player2.countTricks();
@@ -74,12 +88,13 @@ public class GameController {
                     maxScore = player3Score;
                 }
 
+                // Print the winner information
                 ioHandler.printSeparator();
                 ioHandler.printMessage("🏆 " + winner.name + " wins the game!");
                 ioHandler.printMessage("Final score: " + maxScore);
                 ioHandler.printSeparator();
 
-                break;// end the while loop
+                break;  // end the while loop
             }
         }
     }
