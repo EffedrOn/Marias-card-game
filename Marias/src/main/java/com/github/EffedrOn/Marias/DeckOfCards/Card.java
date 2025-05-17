@@ -6,7 +6,6 @@ public class Card {
     // This is the datastructure which would be appropriate for holding the cards: cards = [[7,7,7], ["X",15,10]]
     // That means the [[Symbol of card, rank of card, Value of card in game ]]
 
-    // 2 typy hodnot jedna pri farbe druha pri malom velkom
     // Tu treba tiez nejak dodat ze hlaska ma nejaku hodnotu
     // The ranks should indicate how strong the card really is  but it doesnt depend only on this but also on type of game.
     public static final int ACE = 7;
@@ -28,7 +27,6 @@ public class Card {
     //public static final char[] SUIT_SYMBOLS = {'♠', '♣', '♦', '♥' };
     public static final String[] SUIT_SYMBOLS = {"🍃","🌰", "⚫", "❤️"  };
                                             // list, zalud, gula, cerven
-    // Tu by som mohol vytvorit miesto emoji a stringu oznacujuceho typ karty cele ascii art kariet
 
     private final int rank;
     private final int  suit;
@@ -55,6 +53,5 @@ public class Card {
     public String toString() {
         return RANK_SYMBOLS[rank] + SUIT_SYMBOLS[suit];
     }
-
 
 }

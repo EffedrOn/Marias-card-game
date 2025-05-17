@@ -26,7 +26,7 @@ public class Hand implements HandInterface{
 
     public Card getRandomCard() {
         if (cards.isEmpty()) {
-            return null; // or throw an exception, depending on your needs
+            return null; // or throw an exception, depending on needs
         }
 
         Random random = new Random();

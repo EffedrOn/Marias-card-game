@@ -1,12 +1,12 @@
 1. presunut logiku z playedCards a playerIndexes do tricku. DONE
 2. Naimplementovat checkPlayerCard ktora bude checkovat ci hrac zahral kartu v sulade s pravidlami. DONE
-3. Zkompaktnit vypisy v ioHandlery, aby som nemusel volat len printMessagge ale komplexnejsie metody. DONE partly
+3. Zkompaktnit vypisy v ioHandlery, aby som nemusel volat len printMessagge ale komplexnejsie metody. DONE  
 4. Porozdelovat metodu playTrick v Table aby nebola tak neunosne dlha ale radsej volala viacej mensich funkcii. Asi prave play one round by mohla byt jedna metoda.
    Dalsia tiez na rozhodnutie kto vyhral stych.
 5. Dorobit spravne rozdavanie: 1. hrac 7 kariet a 5 bokom, nasledne zahodit 2 do talona, 2. hrac 12 kariet a rovnako aj 3. hrac. DONE
 6. Dorobit porovnavanie kariet ked niesu rovnakej farby, trumfove atd. 
-7. Doriesit aby program neodletel na zlom inpute uzivatela. 
+7. Doriesit aby program neodletel na zlom inpute uzivatela. DONE pre zly index
 8. Dorobit ze ak hrac vylozil kartu ktora nie je rovnakej farby ako prva vylozena -> nemoze vyhrat stych.
 9. Skusit upravit bota tak aby predtym ako zahra kartu previedol jednoduchu logiku ci sa mu to oplati alebo nie, a ake karty moze vobec zahrat.
-10. Dorobit branie stychov, a kto na konci vyhrava.
-
+10. Dorobit branie stychov, a kto na konci vyhrava. DONE
+11. Dorobit hlasku a jej hodnotu.

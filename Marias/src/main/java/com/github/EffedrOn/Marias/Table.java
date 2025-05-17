@@ -24,17 +24,13 @@ public class Table implements TableInterface {
     private Licitator licitator;
     private Card trump;
 
-    public Table(IOHandler ioHandler) {
+    public Table(IOHandler ioHandler, Player player1, Player player2, Player player3) {
         this.ioHandler = ioHandler;
         ioHandler.printInfo("Table created");
 
-        this.player1 = new HumanPlayer("Human", this.ioHandler);
-        this.player2 = new BotPlayer("Bot1", this.ioHandler);
-        this.player3 = new BotPlayer("Bot2", this.ioHandler);
-
-        ioHandler.printInfo("Human player created");
-        ioHandler.printInfo("Bot1 player created");
-        ioHandler.printInfo("Bot2 player created");
+        this.player1 = player1;
+        this.player2 = player2;
+        this.player3 = player3;
 
         this.players = new Player[]{player1, player2, player3};
         this.deck = new Deck();
@@ -57,7 +53,7 @@ public class Table implements TableInterface {
         player1.setCards(deck.deal(7));
         player2.setCards(deck.deal(10));
         player3.setCards(deck.deal(10));
-        // After this player1 should get the remaining 5 cards
+
         /*
         // Printout of dealed cards to players
         for (Player player : players) {
@@ -77,7 +73,6 @@ public class Table implements TableInterface {
 
     public void throwAwayCards() {
         List<Card> cards = player1.getHand().getCards();
-        //ioHandler.printMessage("Your hand (choose 2 cards to throw away):");
         ioHandler.printPrompt("Your hand (choose 2 cards to throw away)");
         ioHandler.printHand(player1.getHand());
 
@@ -86,16 +81,10 @@ public class Table implements TableInterface {
 
         while (true) {
             try {
-                firstIndex = ioHandler.readInt("Enter index of the FIRST card to throw away");
-                secondIndex = ioHandler.readInt("Enter index of the SECOND card to throw away");
-
+                firstIndex = ioHandler.readCardIndex("Enter index of the FIRST card to throw away", cards.size());
+                secondIndex = ioHandler.readCardIndex("Enter index of the SECOND card to throw away", cards.size());
                 if (firstIndex == secondIndex) {
                     ioHandler.printError("You cannot throw away the same card twice.");
-                    continue;
-                }
-
-                if (firstIndex < 0 || firstIndex >= cards.size() || secondIndex < 0 || secondIndex >= cards.size()) {
-                    ioHandler.printError("Invalid indexes. Please enter valid card indexes.");
                     continue;
                 }
 
@@ -104,14 +93,12 @@ public class Table implements TableInterface {
 
                 // Check if any card is Ace or 10
                 if (isHighValueCard(firstCard) || isHighValueCard(secondCard)) {
-                    //ioHandler.printMessage("You cannot throw away an Ace or a 10. Pick different cards.");
                     ioHandler.printError("You cannot throw away an Ace or a 10. Pick different cards.");
                     continue;
                 }
                 break; // input is valid
             } catch (NumberFormatException e) {
-                //ioHandler.printMessage("Please enter valid numbers.");
-                ioHandler.printError("Please enter valid numbers.");
+                ioHandler.printError("Please enter valid numbers");
             }
         }
 
@@ -124,7 +111,7 @@ public class Table implements TableInterface {
             cards.remove(firstIndex);
         }
 
-        ioHandler.printInfo("Two cards have been thrown away.");
+        ioHandler.printInfo("Two cards have been thrown away");
     }
 
     private boolean isHighValueCard(Card card) {
@@ -142,7 +129,6 @@ public class Table implements TableInterface {
 
             if (currentPlayer instanceof HumanPlayer) {
                 String trumpSymbol = Card.SUIT_SYMBOLS[trump.getSuit()];
-                //ioHandler.printMessage( "Trump suit is: " + trumpSymbol );
                 ioHandler.printInfo( "Trump suit is: " + trumpSymbol );
             }
 
@@ -163,7 +149,7 @@ public class Table implements TableInterface {
             // remove the played card from hand of player
             currentPlayer.confirmPlayedCard(card);
 
-            ioHandler.printMessage(currentPlayer.name + " played: " + card); // toto by slo mozno priamo ako funkcia ioHandleru
+            ioHandler.printPlayedCard(currentPlayer, card);
             trick.addCard(card, playerOnMove);
 
             // Set the playerOnMove for the next one in order
@@ -173,6 +159,8 @@ public class Table implements TableInterface {
         // Determine winner
         int winnerPlayerIndex = trick.getWinnerPlayerIndex(trump);
         Player winner = players[winnerPlayerIndex];
+
+        winner.addTrick(trick); // The player who won this trick will take it
 
         // The player who wins the trick should start the new one.
         setPlayerOnMove(winner);

@@ -2,7 +2,6 @@ package com.github.EffedrOn.Marias;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
-import com.github.EffedrOn.Marias.Players.Player;
 
 public class Trick {
     Card[] cards = new Card[3];
@@ -102,7 +101,4 @@ public class Trick {
         }
         return highest;
     }
-
-
-
 }

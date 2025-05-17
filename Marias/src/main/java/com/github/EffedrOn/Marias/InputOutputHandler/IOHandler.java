@@ -2,6 +2,8 @@ package com.github.EffedrOn.Marias.InputOutputHandler;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.Hand;
+import com.github.EffedrOn.Marias.Players.Player;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,10 +27,6 @@ public class IOHandler implements IOHandlerInterface {
         println("[ERROR] " + message);
     }
 
-    public void printSuccess(String message) {
-        println("[SUCCESS] " + message);
-    }
-
     public void printMessage(String message) {
         System.out.println(message);
     }
@@ -41,12 +39,12 @@ public class IOHandler implements IOHandlerInterface {
         print("> " + message + ": ");
     }
 
-    public void printSeparator() {
-        println("--------------------------------------------------");
+    public void printPlayedCard(Player player, Card card) {
+        printMessage(player.name + "played: " + card);
     }
 
-    public void printEmptyLine() {
-        println("");
+    public void printSeparator() {
+        println("--------------------------------------------------");
     }
 
     // General print helpers
@@ -62,7 +60,9 @@ public class IOHandler implements IOHandlerInterface {
         return scanner.nextLine();
     }
 
+
     public void printHand(Hand hand) {
+        // Tu by chcelo este dorobit vypis indexov nad alebo pod vypisanymi kartami
         for (int i = 0; i < hand.getCards().size(); i++) {
             Card c = hand.getCards().get(i);
             System.out.print("| " + c.toString());
@@ -72,15 +72,19 @@ public class IOHandler implements IOHandlerInterface {
         System.out.println();
     }
 
-    // Maybe it will be better to use this function instead
-    public int readInt(String prompt) {
+
+    public int readCardIndex(String prompt, int maxIndex) {
         while (true) {
-            //printMessage(prompt);
             printPrompt(prompt);
             try {
-                return Integer.parseInt(readInput());
+                int index = Integer.parseInt(readInput());
+                if (index >= 0 && index < maxIndex) {
+                    return index;
+                } else {
+                    printError("Invalid index. Please select a number between 0 and " + (maxIndex - 1) + ".");
+                }
             } catch (NumberFormatException e) {
-                printMessage("Invalid input. Please enter a number.");
+                printError("Invalid input. Please enter a valid number.");
             }
         }
     }
