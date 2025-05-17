@@ -25,23 +25,25 @@ public class Table implements TableInterface {
     private Card trump;
 
     public Table(IOHandler ioHandler) {
-        System.out.println("Table created");
         this.ioHandler = ioHandler;
+        ioHandler.printInfo("Table created");
 
         this.player1 = new HumanPlayer("Human", this.ioHandler);
         this.player2 = new BotPlayer("Bot1", this.ioHandler);
         this.player3 = new BotPlayer("Bot2", this.ioHandler);
 
-        ioHandler.printMessage("Human player created");
-        ioHandler.printMessage("Bot1 player created");
-        ioHandler.printMessage("Bot2 player created");
+        ioHandler.printInfo("Human player created");
+        ioHandler.printInfo("Bot1 player created");
+        ioHandler.printInfo("Bot2 player created");
 
         this.players = new Player[]{player1, player2, player3};
         this.deck = new Deck();
-        ioHandler.printMessage("Deck created");
+        ioHandler.printInfo("Deck created");
 
         playerOnMove = 0;            // Zatial bude zacinat vzdy human player
         licitator = new Licitator(); // tu si budu hraci vyberat typ hry a sadzbu
+        ioHandler.printInfo("End of Table initialization");
+        ioHandler.printSeparator();
     }
 
     public void dealCards() {
@@ -50,7 +52,7 @@ public class Table implements TableInterface {
         // deal cards to players
         // will call the deal from the deck class
         // It should be somehow marked which player deals the cards.
-        ioHandler.printMessage("Dealing Cards");
+        ioHandler.printInfo("Dealing Cards");
 
         player1.setCards(deck.deal(7));
         player2.setCards(deck.deal(10));
@@ -75,7 +77,8 @@ public class Table implements TableInterface {
 
     public void throwAwayCards() {
         List<Card> cards = player1.getHand().getCards();
-        ioHandler.printMessage("Your hand (choose 2 cards to throw away):");
+        //ioHandler.printMessage("Your hand (choose 2 cards to throw away):");
+        ioHandler.printPrompt("Your hand (choose 2 cards to throw away)");
         ioHandler.printHand(player1.getHand());
 
         int firstIndex = -1;
@@ -83,19 +86,16 @@ public class Table implements TableInterface {
 
         while (true) {
             try {
-                ioHandler.printMessage("Enter index of the FIRST card to throw away:");
-                firstIndex = Integer.parseInt(ioHandler.readInput());
-
-                ioHandler.printMessage("Enter index of the SECOND card to throw away:");
-                secondIndex = Integer.parseInt(ioHandler.readInput());
+                firstIndex = ioHandler.readInt("Enter index of the FIRST card to throw away");
+                secondIndex = ioHandler.readInt("Enter index of the SECOND card to throw away");
 
                 if (firstIndex == secondIndex) {
-                    ioHandler.printMessage("You cannot throw away the same card twice.");
+                    ioHandler.printError("You cannot throw away the same card twice.");
                     continue;
                 }
 
                 if (firstIndex < 0 || firstIndex >= cards.size() || secondIndex < 0 || secondIndex >= cards.size()) {
-                    ioHandler.printMessage("Invalid indexes. Please enter valid card indexes.");
+                    ioHandler.printError("Invalid indexes. Please enter valid card indexes.");
                     continue;
                 }
 
@@ -104,12 +104,14 @@ public class Table implements TableInterface {
 
                 // Check if any card is Ace or 10
                 if (isHighValueCard(firstCard) || isHighValueCard(secondCard)) {
-                    ioHandler.printMessage("You cannot throw away an Ace or a 10. Pick different cards.");
+                    //ioHandler.printMessage("You cannot throw away an Ace or a 10. Pick different cards.");
+                    ioHandler.printError("You cannot throw away an Ace or a 10. Pick different cards.");
                     continue;
                 }
                 break; // input is valid
             } catch (NumberFormatException e) {
-                ioHandler.printMessage("Please enter valid numbers.");
+                //ioHandler.printMessage("Please enter valid numbers.");
+                ioHandler.printError("Please enter valid numbers.");
             }
         }
 
@@ -122,7 +124,7 @@ public class Table implements TableInterface {
             cards.remove(firstIndex);
         }
 
-        ioHandler.printMessage("Two cards have been thrown away.");
+        ioHandler.printInfo("Two cards have been thrown away.");
     }
 
     private boolean isHighValueCard(Card card) {
@@ -140,7 +142,8 @@ public class Table implements TableInterface {
 
             if (currentPlayer instanceof HumanPlayer) {
                 String trumpSymbol = Card.SUIT_SYMBOLS[trump.getSuit()];
-                ioHandler.printMessage( "Trump suit is: " + trumpSymbol );
+                //ioHandler.printMessage( "Trump suit is: " + trumpSymbol );
+                ioHandler.printInfo( "Trump suit is: " + trumpSymbol );
             }
 
             Card card = currentPlayer.playCard();
@@ -160,7 +163,7 @@ public class Table implements TableInterface {
             // remove the played card from hand of player
             currentPlayer.confirmPlayedCard(card);
 
-            ioHandler.printMessage(currentPlayer.name + " played: " + card);
+            ioHandler.printMessage(currentPlayer.name + " played: " + card); // toto by slo mozno priamo ako funkcia ioHandleru
             trick.addCard(card, playerOnMove);
 
             // Set the playerOnMove for the next one in order
@@ -176,7 +179,7 @@ public class Table implements TableInterface {
 
         ioHandler.printMessage(players[playerOnMove].name + " wins the trick!");
         ioHandler.printMessage("Trick value: " + trick.getValue());
-        ioHandler.printMessage("----------------------------------");
+        ioHandler.printSeparator();
         //trick.reset(); // Not needed because every new time playTrick is called new instance of trick is created
     }
 

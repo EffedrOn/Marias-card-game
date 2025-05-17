@@ -14,7 +14,7 @@ public class HumanPlayer extends Player {
     }
 
     public void getBet() {
-        ioHandler.printMessage("Enter your bet:");
+        ioHandler.printPrompt("Enter your bet");
         // read input
     }
 
@@ -23,8 +23,8 @@ public class HumanPlayer extends Player {
         ioHandler.printMessage("Your hand:");
         ioHandler.printHand(hand);
 
-        ioHandler.printMessage("Choose card index to play:");
-        int idx = Integer.parseInt(ioHandler.readInput());
+        int idx = ioHandler.readInt("Choose card index to play");
+        // Treba este ocheckovat ci idx je naozaj platny index (v rozmedzi 0,hand.length)
         Card chosen = hand.getCards().get(idx);
         //hand.removeCard(chosen);
         return chosen;
@@ -32,10 +32,10 @@ public class HumanPlayer extends Player {
 
     @Override
     public Card chooseTrump() {
-        ioHandler.printMessage("Choose trump:");
+        ioHandler.printPrompt("Choose trump");
         ioHandler.printHand(hand);
-        ioHandler.printMessage("Choose card index to pick the trump:");
-        int idx = Integer.parseInt(ioHandler.readInput());
+        int idx = ioHandler.readInt("Choose card index to pick the trump");
+        // Treba tu este ocheckovat ci je idx platny ako aj v playCard
         Card chosen = hand.getCards().get(idx);
         return chosen;
     }
