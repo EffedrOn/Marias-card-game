@@ -87,6 +87,10 @@ public class Table implements TableInterface {
          */
     }
 
+    public void setStartingPlayer(int index) {
+        this.playerOnMove = index;
+    }
+
     /**
      * Deal the remaining 5 cards to first player, in second round of dealing.
      */
@@ -211,7 +215,7 @@ public class Table implements TableInterface {
         Player winner = players[winnerPlayerIndex];
 
         // Informative printout who won each trick
-        ioHandler.printMessage(players[playerOnMove].name + " wins the trick!");
+        ioHandler.printMessage(winner.name + " wins the trick!");
         ioHandler.printMessage("Trick value: " + trick.getValue());
         if (isLastTrick) {
             trick.setBonusPoints(10);
@@ -331,6 +335,7 @@ public class Table implements TableInterface {
     }
 
     public void shuffleCards() {
+        deck.reset();
         deck.shuffle();
     }
 

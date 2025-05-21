@@ -66,4 +66,8 @@ public abstract class Player implements PlayerInterface {
         }
         return this.score;
     }
+
+    public void clearTricks() {
+        wonTricks.clear();
+    }
 }

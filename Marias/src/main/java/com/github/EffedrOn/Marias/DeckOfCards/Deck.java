@@ -15,18 +15,32 @@ public class Deck implements DeckInterface {
 
     public Deck() {
         cards = new ArrayList<>();
-        for (int suit = 0; suit < Card.SUIT_SYMBOLS.length; suit++) {
-            for (int rank = 0; rank < Card.RANK_SYMBOLS.length; rank++) {
-                cards.add(new Card(rank, suit));
-            }
-        }
-
+        init();
         /*
         // printout of cards in deck
         for (Card card : cards) {
             System.out.println(card);
         }
         */
+    }
+
+    /**
+     * Refill the deck with a fresh set of cards.
+     */
+    private void init() {
+        cards.clear();
+        for (int suit = 0; suit < Card.SUIT_SYMBOLS.length; suit++) {
+            for (int rank = 0; rank < Card.RANK_SYMBOLS.length; rank++) {
+                cards.add(new Card(rank, suit));
+            }
+        }
+    }
+
+    /**
+     * Refill and reshuffle the deck.
+     */
+    public void reset() {
+        init();
     }
 
     @Override

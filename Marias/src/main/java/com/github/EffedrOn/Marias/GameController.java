@@ -85,6 +85,39 @@ public class GameController {
      * Then total winner of game is decided.
      */
     public void startGame() {
+        while (true) {
+            ioHandler.printMessage("Starting a new game round...");
+            ioHandler.printSeparator();
+
+            startRound();
+
+            // skusit aby nebol vzdy human ten kto vybera trumfa ale ten kto je na rade (teda napr bot1 a human hra spolu s bot2)
+            while (true) {
+                table.playTrick(); // logiku tohto presunut asi do gamecontrolleru
+
+                if (table.end()) {
+                    ioHandler.printMessage("End of game");
+                    // Determine winner
+                    determineGameWinner();
+                    break;  // end the while loop
+                }
+            }
+            String response = ioHandler.readLine("Do you want to play another round? (y/n): ");
+            if (!response.equalsIgnoreCase("y")) {
+                ioHandler.printMessage("Thanks for playing!");
+                break;
+            }
+
+            // Clear tricks for all players before next round
+            player1.clearTricks();
+            player2.clearTricks();
+            player3.clearTricks();
+        }
+    }
+
+    private void startRound() {
+        // 0 = Human player starts round
+        table.setStartingPlayer(0);
         // Players should choose what value will the game be
         table.shuffleCards();
         // Tu by este mal mat prvy hrac moznost "prelozit" balik
@@ -95,19 +128,6 @@ public class GameController {
 
         // Ask First player to choose 2 cards to throw away
         table.throwAwayCards();
-
-        // skusit aby nebol vzdy human ten kto vybera trumfa ale ten kto je na rade (teda napr bot1 a human hra spolu s bot2)
-        while (true) {
-            table.playTrick(); // logiku tohto presunut asi do gamecontrolleru
-
-            if (table.end()) {
-                ioHandler.printMessage("End of game");
-
-                // Determine winner
-                determineGameWinner();
-
-                break;  // end the while loop
-            }
-        }
     }
+
 }
