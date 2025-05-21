@@ -1,0 +1,30 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# macOS system files
+.DS_Store
+
+# Vim/IntelliJ swap files
+*.swp
+*.swo
+
+# IntelliJ IDEA project config (optional if you're sharing the project)
+.idea/
+
+# Compiled classes
+*.class
+
+# Logs
+*.log
+
+# Maven
+target/
+
+# OS file trash
+.Trashes
