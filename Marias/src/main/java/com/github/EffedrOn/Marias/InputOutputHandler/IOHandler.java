@@ -69,46 +69,17 @@ public class IOHandler implements IOHandlerInterface {
 
 
     public void printHand(Hand hand) {
-        List<Card> cards = hand.getCards();
-
-        StringBuilder indexLine = new StringBuilder();
-        StringBuilder cardLine = new StringBuilder();
-
-        List<Integer> cardWidths = new ArrayList<>();
-
-        List<String> formattedCards = new ArrayList<>();
-        for (Card card : cards) {
-            String cardStr = card.toString();
-            String formatted = "| " + cardStr + " ";
-            formattedCards.add(formatted);
-            cardWidths.add(formatted.length());
+        for (int i = 0; i < hand.getCards().size(); i++) {
+            Card c = hand.getCards().get(i);
+            System.out.print(String.format("| %d : %3s ", i, c.toString()));
         }
+        System.out.println("|");
 
-        int currentPos = 0;
-        for (int i = 0; i < formattedCards.size(); i++) {
-            String card = formattedCards.get(i);
-            int width = cardWidths.get(i);
-            cardLine.append(card);
-
-            int indexPos = currentPos + width / 2 - String.valueOf(i).length() / 2;
-            while (indexLine.length() < indexPos) {
-                indexLine.append(" ");
-            }
-            indexLine.append(i);
-
-            currentPos += width;
-        }
-
-        cardLine.append("|");
-
-        System.out.println(indexLine.toString());
-        System.out.println(cardLine.toString());
         /*
         for (int i = 0; i < hand.getCards().size(); i++) {
             Card c = hand.getCards().get(i);
-            System.out.print("| " + c.toString());
+            System.out.print("|  " + c.toString() + "  ");
         }
-
         System.out.print("|");
         System.out.println();
 

@@ -194,22 +194,36 @@ public class Table implements TableInterface {
             rotatePlayers();
         }
 
+        // Determine winner of the trick
+        boolean isLastTrick = end();
+        determineWinner(trick, isLastTrick);
+    }
+
+    /**
+     * Function that finds the winner of trick
+     * sets the winner as player who will start next trick
+     * prints informations about the winner and trick value.
+     * @param trick
+     */
+    private void determineWinner(Trick trick, boolean isLastTrick) {
         // Determine winner of trick
         int winnerPlayerIndex = trick.getWinnerPlayerIndex(trump);
         Player winner = players[winnerPlayerIndex];
 
-        winner.addTrick(trick); // The player who won this trick will take it
-
-        // The player who wins the trick should start the new one.
-        setPlayerOnMove(winner);
-
         // Informative printout who won each trick
         ioHandler.printMessage(players[playerOnMove].name + " wins the trick!");
         ioHandler.printMessage("Trick value: " + trick.getValue());
+        if (isLastTrick) {
+            trick.setBonusPoints(10);
+            ioHandler.printMessage("Bonus: Last trick! 10 points awarded.");
+        }
         ioHandler.printSeparator();
-        //trick.reset(); // Not needed because every new time playTrick is called new instance of trick is created
-    }
 
+        winner.addTrick(trick); // The player who won this trick will take it
+        // The player who wins the trick should start the new one.
+        setPlayerOnMove(winner);
+
+    }
     /**
      * Set player who won the trick to start in next round
      * @param winner

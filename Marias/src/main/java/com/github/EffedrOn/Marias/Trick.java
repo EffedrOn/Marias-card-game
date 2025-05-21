@@ -13,6 +13,7 @@ public class Trick {
     Card[] cards = new Card[3];
     public int[] playerIndexes  = new int[3];
     private int count = 0;
+    private int bonusPoints = 0;
 
     public void addCard(Card card, int playerIndex) {
         cards[count] = card;
@@ -20,6 +21,9 @@ public class Trick {
         count++;
     }
 
+    public void setBonusPoints(int bonus) {
+        this.bonusPoints = bonus;
+    }
     public int getValue() {
         int sum = 0;
         for (Card c : cards) {
@@ -27,6 +31,7 @@ public class Trick {
                 sum += getCardValue(c); // jednoduchý výpočet
             }
         }
+        sum += bonusPoints; // only if trick is the last one, bonus points are added
         return sum;
     }
 

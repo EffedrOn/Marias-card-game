@@ -21,6 +21,10 @@ public class GameController {
     private final Player player2;
     private final Player player3;
 
+    // Grouping the players based on teams
+    private Player soloPlayer;
+    private Player[] teamPlayers;
+
     // mozno by mala byt instancia comparatoru tu
 
     /**
@@ -33,6 +37,8 @@ public class GameController {
         this.player2 = new BotPlayer("Bot1", this.ioHandler);
         this.player3 = new BotPlayer("Bot2", this.ioHandler);
 
+        setupTeams(player1, player2, player3);
+
         ioHandler.printInfo("Human player created");
         ioHandler.printInfo("Bot1 player created");
         ioHandler.printInfo("Bot2 player created");
@@ -41,8 +47,36 @@ public class GameController {
 
     }
 
+    private void setupTeams(Player player1, Player player2, Player player3) {
+        this.soloPlayer = player1;
+        this.teamPlayers = new Player[]{player2, player3};
+    }
+
     // Tu by mohla byt funkcia ktora by bola zodpovedna za to aky typ hry sa hra (Farba, Maly, Velky)
 
+    private void determineGameWinner() {
+        int  soloPlayerScore = this.soloPlayer.countTricks();
+        int  teamPlayer0Score = this.teamPlayers[0].countTricks();
+        int  teamPlayer1Score= this.teamPlayers[1].countTricks();
+
+        ioHandler.printMessage(soloPlayer.name + " score: " + soloPlayerScore);
+        ioHandler.printMessage(teamPlayers[0].name + " score: " + teamPlayer0Score);
+        ioHandler.printMessage(teamPlayers[1].name + " score: " + teamPlayer1Score);
+
+
+        int teamScore = teamPlayer0Score + teamPlayer1Score;
+
+        ioHandler.printMessage("Team players " + teamPlayers[0].name + " and " + teamPlayers[1].name + " scored: " + teamScore);
+
+        if (soloPlayerScore > teamScore) {
+            ioHandler.printMessage("You won!");
+            ioHandler.printMessage("Solo player " + soloPlayer.name + " WINS!");
+        } else {
+            ioHandler.printMessage("Team won!");
+            ioHandler.printMessage("You lost!");
+        }
+        ioHandler.printSeparator();
+    }
     /**
      * Starting the game in which deck of cards is shuffled
      * Then cards are dealed
@@ -62,37 +96,15 @@ public class GameController {
         // Ask First player to choose 2 cards to throw away
         table.throwAwayCards();
 
+        // skusit aby nebol vzdy human ten kto vybera trumfa ale ten kto je na rade (teda napr bot1 a human hra spolu s bot2)
         while (true) {
             table.playTrick(); // logiku tohto presunut asi do gamecontrolleru
 
             if (table.end()) {
                 ioHandler.printMessage("End of game");
 
-                int player1Score = this.player1.countTricks();
-                int  player2Score = this.player2.countTricks();
-                int player3Score= this.player3.countTricks();
-                ioHandler.printMessage(player1.name + " score: " + player1Score);
-                ioHandler.printMessage(player2.name + " score: " + player2Score);
-                ioHandler.printMessage(player3.name + " score: " + player3Score);
-
                 // Determine winner
-                Player winner = player1;
-                int maxScore = player1Score;
-
-                if (player2Score > maxScore) {
-                    winner = player2;
-                    maxScore = player2Score;
-                }
-                if (player3Score > maxScore) {
-                    winner = player3;
-                    maxScore = player3Score;
-                }
-
-                // Print the winner information
-                ioHandler.printSeparator();
-                ioHandler.printMessage("🏆 " + winner.name + " wins the game!");
-                ioHandler.printMessage("Final score: " + maxScore);
-                ioHandler.printSeparator();
+                determineGameWinner();
 
                 break;  // end the while loop
             }
