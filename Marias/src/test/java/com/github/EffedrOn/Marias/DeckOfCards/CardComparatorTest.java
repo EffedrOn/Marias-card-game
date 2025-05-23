@@ -1,7 +1,6 @@
 package com.github.EffedrOn.Marias.DeckOfCards;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CardComparatorTest {
@@ -20,9 +19,11 @@ public class CardComparatorTest {
     void testSameSuitHigherRankWins() {
         Card ace = new Card(Card.ACE, Card.hearts);
         Card king = new Card(Card.KING, Card.hearts);
+        Card ten = new Card(Card.TEN, Card.hearts);
         CardComparator comparator = new CardComparator(Card.bells);
 
         assertTrue(comparator.compare(king, ace) > 0);
+        assertTrue(comparator.compare(ten, ace) > 0);
     }
 
     @Test
