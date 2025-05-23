@@ -1,11 +1,13 @@
-package com.github.EffedrOn.Marias;
+package com.github.EffedrOn.Marias.Game;
 
 import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.DeckOfCards.CardComparator;
 import com.github.EffedrOn.Marias.DeckOfCards.Deck;
+import com.github.EffedrOn.Marias.Hand;
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.HumanPlayer;
 import com.github.EffedrOn.Marias.Players.Player;
+import com.github.EffedrOn.Marias.Trick;
 
 import java.util.List;
 

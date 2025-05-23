@@ -1,8 +1,6 @@
-package com.github.EffedrOn.Marias;
+package com.github.EffedrOn.Marias.Game;
 
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
-import com.github.EffedrOn.Marias.Players.BotPlayer;
-import com.github.EffedrOn.Marias.Players.HumanPlayer;
 import com.github.EffedrOn.Marias.Players.Player;
 
 /**
@@ -27,29 +25,25 @@ public class GameController {
     private Player[] teamPlayers;
 
     // Value that game has / what players pay when he loose
-    private static final int PAYOFF_AMOUNT = 2; // maybe it would be good to have this in lictator and i will take it out from it.
+    private static final int PAYOFF_AMOUNT = 2;
     // Or i could just licitate inside the GameController class which will change the internal variable PAYOFF_AMOUNT.
     // mozno by mala byt instancia comparatoru tu
     private int startingPlayerIndex = 0;
     /**
      * Constructor
      */
-    public GameController() {
-        this.ioHandler = new IOHandler();
+    public GameController(Player player1, Player player2, Player player3, IOHandler ioHandler, Table table) {
+        this.ioHandler = ioHandler;
 
-        this.player1 = new HumanPlayer("Human", this.ioHandler);
-        this.player2 = new BotPlayer("Bot1", this.ioHandler);
-        this.player3 = new BotPlayer("Bot2", this.ioHandler);
+        this.player1 = player1;
+        this.player2 = player2;
+        this.player3 = player3;
 
         this.allPlayers = new Player[]{player1, player2, player3};
 
         setupTeams(startingPlayerIndex);
 
-        ioHandler.printInfo("Human player created");
-        ioHandler.printInfo("Bot1 player created");
-        ioHandler.printInfo("Bot2 player created");
-
-        this.table = new Table(ioHandler, player1, player2, player3);
+        this.table = table;
     }
 
     private void setupTeams(int startIndex) {
