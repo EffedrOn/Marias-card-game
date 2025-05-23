@@ -1,4 +1,166 @@
+Šimon Fabuš 
+23.5.2025
 USER DOCUMENTATION
-Mariáš card game implementation
+Mariáš card game
+https://sk.wikipedia.org/wiki/Mariáš
 
 
+This is a CLI-based implementation of the Mariáš card game written in Java using the Maven build tool. 
+The game simulates: 
+•card dealing
+•choosing trump
+•throwing 2 cards away at the beginning of the game 
+•trick-taking logic
+•marriage (King and Upper of same colour)
+•bonus points for taking last trick
+•player interactions (human and bots)
+•scorekeeping / keeping track of how much money players win/loose
+
+with a structured object-oriented design.
+
+• The human player (user) is first to play when the program is activated
+
+The game enables only one variant = Colour. 
+Fixed price of each round of game is 2 cents. 
+	• Player who lost pays from his bank 2 cents to each other player who won.
+	• Player who won get payed 2 cents by every other player who lost.
+
+
+	Prerequisites
+
+Before you begin, ensure the following tools are installed:
+	•	Java 23 SDK
+	•	Apache Maven 3.9+
+
+Make sure JAVA_HOME points to JDK 23.
+
+
+	Project Structure
+
+Main source files are located in: src/main/java/com/github/EffedrOn/Marias/
+
+Test files are located in: src/test/java/com/github/EffedrOn/Marias/
+
+
+	Build & Compile
+
+To compile the project: mvn compile
+This compiles all classes without running tests.
+
+
+	Run the Game
+
+To run the main CLI interface: mvn exec:java
+
+This starts the Main class located at: com.github.EffedrOn.Marias.Main
+
+The CLI will guide you through a game of Marias with a combination of human and bot players.
+
+
+	Running Unit Tests
+
+To execute all unit tests: mvn test
+
+Tests are included for:
+	•	HandTest.java
+	•	DeckTest.java
+	•	TrickTest.java
+	•	CardComparatorTest.java
+
+These cover key functionality like card dealing, trick logic, hand management, and comparison rules.
+
+
+	Game Features
+
+•	Card Deck: Bohemian (German) playing cards
+•	Players: Human and bot-controlled
+•	Bot Logic: Basic strategy implemented to choose cards
+•	Round-Based: Multiple rounds with score resetting
+•	Banking System: Each player has a virtual bank; winners gain cents based on results
+•	Trick Comparison: Uses CardComparator based on current trump
+•	Test-Driven Development: Unit tests included for core logic
+
+
+	Notes
+•	Java version is explicitly set in pom.xml (<source>23</source>)
+•	Game logic is managed primarily in Game, GameController, and Table
+•	IO interaction is handled in IOHandler
+•	Player behavior is abstracted using Player, HumanPlayer, and BotPlayer
+
+
+	Mariáš(Colour):
+ 
+• The game is played by 3 players
+• 2 players play against 1
+• The first player choose the trump suit.
+• He has to pick 2 cards which he will throw away and they will be not touched throughout the rest of the round.
+• First player plays first card.
+
+Rules:
+
+• Player has to "confess" the colour and if the player has higher card as the highest one in the trick on table, he has to play it.
+• If player does not have card of suit of first card played in trick, but has a trump -> he has to play it.
+• If player does not even have a trump, he can play any card from his hand.
+• The player who won the last trick plays the first card of next round of tricks.
+
+• Order of cards: Ace, Ten, King, Hornik, Dolnik, 9, 8, 7
+Goal:
+
+• The goal of game is to take as much as possible valued cards and bonus points. Valued cards are 10s and Aces.
+• Last trick has value of 10.
+• Marriage has value of 20, in trump colour 40.
+
+If no marriages were played max ∑ game = 90
+If some marriages were played ∑ game in [110 - 190]
+
+Example of playing the game:
+
+[INFO] Human player created
+[INFO] Bot1 player created
+[INFO] Bot2 player created
+[INFO] Human player entered the game
+[INFO] Bot1 player entered the game
+[INFO] Bot2 player entered the game
+[INFO] Table created
+[INFO] Deck created
+[INFO] End of Table initialization
+---------------------------------------------------
+Starting a new game round...
+---------------------------------------------------
+[INFO] Dealing Cards
+> Choose trump: 
+| 0 : D❤️ | 1 :  K⚫ | 2 : 10❤️ | 3 :  9⚫ | 4 : 10🌰 | 5 : H🍃 | 6 : 9🍃 |
+> Choose card index to pick the trump: 
+2
+> Your hand (choose 2 cards to throw away): 
+| 0 : D❤️ | 1 :  K⚫ | 2 : 10❤️ | 3 :  9⚫ | 4 : 10🌰 | 5 : H🍃 | 6 : 9🍃 | 7 : 9🌰 | 8 :  A⚫ | 9 : K🍃 | 10 : 8❤️ | 11 : H❤️ |
+> Enter index of the FIRST card to throw away: 
+0
+> Enter index of the SECOND card to throw away: 
+2
+[ERROR] You cannot throw away an Ace or a 10. Pick different cards.
+> Enter index of the FIRST card to throw away: 
+6
+> Enter index of the SECOND card to throw away: 
+7
+[INFO] Two cards have been thrown away
+---------------------------------------------------
+[INFO] Trump suit is: ❤️
+Your hand:
+| 0 : D❤️ | 1 :  K⚫ | 2 : 10❤️ | 3 :  9⚫ | 4 : 10🌰 | 5 : H🍃 | 6 :  A⚫ | 7 : K🍃 | 8 : 8❤️ | 9 : H❤️ |
+> Choose card index to play: 
+0
+Human played: D❤️
+Bot1 played: A❤️
+Bot2 played: K❤️
+[INFO] Bot1 wins the trick!
+[INFO] Trick value: 10
+---------------------------------------------------
+Bot1 played: D⚫
+Bot2 played: 10⚫
+[INFO] Trump suit is: ❤️
+Your hand:
+| 0 :  K⚫ | 1 : 10❤️ | 2 :  9⚫ | 3 : 10🌰 | 4 : H🍃 | 5 :  A⚫ | 6 : K🍃 | 7 : 8❤️ | 8 : H❤️ |
+> Choose card index to play: 
+
+  
