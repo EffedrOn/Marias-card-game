@@ -4,9 +4,18 @@ import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.Player;
 
 /**
- * Class responsible for whole game logic, that decides who is on turn, who won, who lost, who went bankrupt...
- * This class handle main game logic.
- * .
+ * Controls the overall game flow and logic for the Marias card game.
+ * <p>
+ * This class handles shuffling, dealing, managing turns, score calculation,
+ * determining game winners, managing banks, and checking for bankrupt players.
+ * It also rotates the starting player and prompts the user for another round.
+ * </p>
+ *
+ * <p>
+ * The main interaction with players and table is coordinated here,
+ * including when to start and end rounds and how to handle payoffs.
+ * </p>
+ *
  * @author Simon Fabus
  * @version 1.0
  * @since 2025-03-29
@@ -20,25 +29,29 @@ public class GameController {
     private final Player player3;
 
     private final Player[] allPlayers;
+
     // Grouping the players based on teams
     private Player soloPlayer;
     private Player[] teamPlayers;
 
     // Value that game has / what players pay when he loose
     private static final int PAYOFF_AMOUNT = 2;
-    // Or i could just licitate inside the GameController class which will change the internal variable PAYOFF_AMOUNT.
-    // mozno by mala byt instancia comparatoru tu
     private int startingPlayerIndex = 0;
+
     /**
-     * Constructor
+     * Constructs a new GameController to manage gameplay.
+     *
+     * @param player1    the first player
+     * @param player2    the second player
+     * @param player3    the third player
+     * @param ioHandler  the IO handler for CLI interactions
+     * @param table      the game table
      */
     public GameController(Player player1, Player player2, Player player3, IOHandler ioHandler, Table table) {
         this.ioHandler = ioHandler;
-
         this.player1 = player1;
         this.player2 = player2;
         this.player3 = player3;
-
         this.allPlayers = new Player[]{player1, player2, player3};
 
         setupTeams(startingPlayerIndex);
@@ -46,11 +59,20 @@ public class GameController {
         this.table = table;
     }
 
+    /**
+     * Sets up the solo player and team players based on who is starting.
+     *
+     * @param startIndex the index of the solo player
+     */
     private void setupTeams(int startIndex) {
         soloPlayer = allPlayers[startIndex];
         teamPlayers = new Player[]{allPlayers[(startIndex + 1) % 3], allPlayers[(startIndex + 2) % 3]};
     }
 
+    /**
+     * Determines the winner of the game and distributes the payoff accordingly.
+     * Updates player bank balances and checks for bankruptcy.
+     */
     private void determineGameWinner() {
         int  soloPlayerScore = this.soloPlayer.countTricks() + this.soloPlayer.getMarriagePoints();
         int  teamPlayer0Score = this.teamPlayers[0].countTricks() + this.teamPlayers[0].getMarriagePoints();
@@ -65,7 +87,6 @@ public class GameController {
 
         // Bank/payoff logic and letting user know who wins.
         if (soloPlayerScore > teamScore) {
-            //ioHandler.printMessage("You won!"); // tu bude tiez treba checknut ci je human naozaj soloPlayer
             ioHandler.printMessage("-------------Solo player " + soloPlayer.name + " WINS!---------------");
             // Solo wins, team players pay
             for (Player teamPlayer : teamPlayers) {
@@ -74,7 +95,6 @@ public class GameController {
             }
         } else {
             ioHandler.printMessage("---------------------Team won!---------------------");
-            //ioHandler.printMessage("You lost!"); // toto bude treba checknut ci je soloplayer naozaj human
             // Team wins, solo player pays each team player
             soloPlayer.adjustBank(-PAYOFF_AMOUNT * teamPlayers.length);
             for (Player teamPlayer : teamPlayers) {
@@ -102,11 +122,8 @@ public class GameController {
     }
 
     /**
-     * Starting the game in which deck of cards is shuffled
-     * Then cards are dealed
-     * First player chooses trump of game, then he throw away 2 cards
-     * Then the rounds of tricks are played until every player has empty hand (no card)
-     * Then total winner of game is decided.
+     * Starts the game loop, shuffling cards and playing rounds until termination.
+     * Prompts users for continuing new rounds and resets state between rounds.
      */
     public void startGame() {
         while (true) {
@@ -115,9 +132,8 @@ public class GameController {
             ioHandler.printSeparator();
 
             startRound();
-            // skusit aby nebol vzdy human ten kto vybera trumfa ale ten kto je na rade (teda napr bot1 a human hra spolu s bot2)
             while (true) {
-                table.playTrick(); // logiku tohto presunut asi do gamecontrolleru
+                table.playTrick();
 
                 if (table.end()) {
                     ioHandler.printMessage("--------------------End of game--------------------");
@@ -146,19 +162,16 @@ public class GameController {
         }
     }
 
+    /**
+     * Initializes and deals cards for a new round of the game.
+     * Handles setting the starting player, choosing trump, and discarding cards.
+     */
     private void startRound() {
-        //table.setStartingPlayer(0); // 0 = Human player starts round
         table.setStartingPlayer(startingPlayerIndex);
-        // Players should choose what value will the game be
-
         table.shuffleCards();
-        // Tu by este mal mat prvy hrac moznost "prelozit" balik
-
-        table.dealCards();  // Z reality je to tak ze asi sa rozdava na 2x najprv dostanu hraci po 5 kariet a human 7, nasledne dostanu vsetci dalsich 5
-
-        table.chooseTrump(); // Mozno este pridat ze hrac moze zavolit z ludu, t.j ze vyberie sa random karta z talonu 5 kariet rozdanych v dealFirstPlayer()
+        table.dealCards();
+        table.chooseTrump();
         table.dealFirstPlayer(); // Deal first player rest of the cards
-        table.throwAwayCards();// Ask First player to choose 2 cards to throw away
+        table.throwAwayCards();  // Ask First player to choose 2 cards to throw away
     }
-
 }

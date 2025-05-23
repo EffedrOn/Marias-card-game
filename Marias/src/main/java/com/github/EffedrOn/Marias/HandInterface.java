@@ -8,4 +8,5 @@ public interface HandInterface {
     void addCards(Card[] cards);
     List<Card> getCards();
     void removeCard(Card card);
+    Card getRandomCard();
 }

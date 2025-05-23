@@ -22,50 +22,102 @@ import java.util.Scanner;
 public class IOHandler implements IOHandlerInterface {
     private final Scanner scanner;
 
+    /**
+     * Constructs a new IOHandler and initializes the input scanner.
+     */
     public IOHandler() {
          this.scanner = new Scanner(System.in);
     }
 
-    // Basic input method
+    /**
+     * Prompts the user and reads a line of input.
+     *
+     * @param prompt the message to display before reading input
+     * @return the input line from the user
+     */
     public String readLine(String prompt) {
         printPrompt(prompt);
         return scanner.nextLine();
     }
 
-    // Common message types
+    /**
+     * Prints an error message to the console with a standard prefix.
+     *
+     * @param message the error message to display
+     */
     public void printError(String message) {
         println("[ERROR] " + message);
     }
 
+    /**
+     * Prints a plain message to the console.
+     *
+     * @param message the message to print
+     */
     public void printMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Prints an informational message with a prefix.
+     *
+     * @param message the info message to print
+     */
     public void printInfo(String message) {
         println("[INFO] " + message);
     }
 
+    /**
+     * Prints a user prompt with a prefixed format.
+     *
+     * @param message the prompt message to print
+     */
     public void printPrompt(String message) {
         println("> " + message + ": ");
     }
 
+    /**
+     * Prints a message indicating the card played by a player.
+     *
+     * @param player the player who played the card
+     * @param card   the card that was played
+     */
     public void printPlayedCard(Player player, Card card) {
         printMessage(player.name + " played: " + card);
     }
 
+    /**
+     * Prints a visual separator to distinguish sections in the CLI.
+     */
     public void printSeparator() {
         println("---------------------------------------------------");
     }
 
+    /**
+     * Prints a game over message.
+     */
     public void printGameOver() {
         printMessage("--------------------Game Over----------------------");
 
     }
 
+    /**
+     * Prints a single line message to the console.
+     *
+     * @param message the message to print
+     */
     public void println(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Prints a message indicating that a player has played a marriage (KING and HORNIK of the same suit).
+     *
+     * @param player         the player who played the marriage
+     * @param card           the card involved in the marriage
+     * @param marriagePoints the points awarded for the marriage
+     * @param isTrumpSuit    true if the marriage is in the trump suit
+     */
     public void printMarriage(Player player, Card card, int marriagePoints, boolean isTrumpSuit) {
         String suitSymnbol = Card.SUIT_SYMBOLS[card.getSuit()];
         if(!isTrumpSuit) {
@@ -75,28 +127,35 @@ public class IOHandler implements IOHandlerInterface {
         }
     }
 
+    /**
+     * Displays the cards in a player's hand, with indexes for user reference.
+     *
+     * @param hand the hand of cards to display
+     */
     public void printHand(Hand hand) {
         for (int i = 0; i < hand.getCards().size(); i++) {
             Card c = hand.getCards().get(i);
             System.out.print(String.format("| %d : %3s ", i, c.toString()));
         }
         System.out.println("|");
-
-        /*
-        for (int i = 0; i < hand.getCards().size(); i++) {
-            Card c = hand.getCards().get(i);
-            System.out.print("|  " + c.toString() + "  ");
-        }
-        System.out.print("|");
-        System.out.println();
-
-         */
     }
 
+    /**
+     * Reads a single line of input from the user.
+     *
+     * @return the line entered by the user
+     */
     public String readInput() {
         return scanner.nextLine();
     }
 
+    /**
+     * Prompts the user to select a card index and validates the input.
+     *
+     * @param prompt   the message shown to prompt the user
+     * @param maxIndex the maximum valid index (exclusive)
+     * @return the validated card index entered by the user
+     */
     public int readCardIndex(String prompt, int maxIndex) {
         while (true) {
             printPrompt(prompt);

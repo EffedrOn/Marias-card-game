@@ -13,32 +13,44 @@ import java.util.List;
 
 /**
  * Table of the marias card game
- * The Table behind which players sit and play the game
- * On table deck of cards lays, cards are dealed
- * Players play cards against each other to win the trick and rotates
+ * <p>
+ * This class simulates the table environment where the Marias game takes place.
+ * It handles dealing cards, managing turns, validating card plays, and determining
+ * the winner of each trick. It connects the players with the deck and the IOHandler
+ * for user interactions.
+ * Players play cards against each other to win the trick and rotates after every trick.
+ * </p>
+ *
+ * <p>
+ * GameController is responsible for creating an instance of this Table and
+ * controlling the overall game loop.
+ * </p>
+ *
  * @author Simon Fabus
  * @version 1.0
  * @since 2025-03-29
  */
 public class Table implements TableInterface {
-    // This class should handle the logic that is taking place on the "table" of the game
-    // So the dealer and players sits behind the table and the cards are dealed to players
-    // ?I think the instances of players and Table should be created in GameControler from which the logic will handle the game and the loop in which the players play against??
+    /** Handler for input/output operations */
     private final IOHandler ioHandler;
-    private final Player player1;
-    private final Player player2;
-    private final Player player3;
+    /** Player instances */
+    private final Player player1, player2, player3;
+    /** Player array for rotation */
     private final Player[] players;
+    /** Deck of cards used in the game */
     private final Deck deck;
+    /** Index of the player currently on move */
     private int playerOnMove;
+    /** Current trump card */
     private Card trump;
 
     /**
-     * Constructor of table class to hold game objects and logic that takes place here.
-     * @param ioHandler for reading and printing inputs/outputs
-     * @param player1
-     * @param player2
-     * @param player3
+     * Constructs the Table with players and initializes the game deck.
+     *
+     * @param ioHandler handler for input/output messages
+     * @param player1 first player
+     * @param player2 second player
+     * @param player3 third player
      */
     public Table(IOHandler ioHandler, Player player1, Player player2, Player player3) {
         this.ioHandler = ioHandler;
@@ -57,39 +69,40 @@ public class Table implements TableInterface {
     }
 
     /**
-     * Deal the first round of cards to all players.
-     * First player gets 7 cards from which he chooses trump.
-     * Second and third player gets 10 cards
+     * Deals the initial hand of cards to all players.
+     * First player gets 7 cards, others get 10.
      */
+    @Override
     public void dealCards() {
-        // Prvy hrac(Human) dostane 7 kariet a dalsich 5 nevidi, zo 7 vyberie trumf potom zo vsetkych 12 vyhodi 2 do talonu
-        // Dalsi hraci dostanu po 10 kariet.
-        // deal cards to players
-        // will call the deal from the deck class
-        // It should be somehow marked which player deals the cards.
         ioHandler.printInfo("Dealing Cards");
 
-        // mozno radsej rozdat 7-5-5 a v dealFirstPlayer rozdat zvysok takze by sa to volalo dealSecond alebo nieco take
         players[playerOnMove].setCards(deck.deal(7));
         players[(playerOnMove + 1) % 3].setCards(deck.deal(10));
         players[(playerOnMove + 2) % 3].setCards(deck.deal(10));
     }
 
     /**
-     * Deal the remaining 5 cards to first player, in second round of dealing.
+     * Deals the remaining 5 hidden cards to the first player after trump is selected.
      */
+    @Override
     public void dealFirstPlayer() {
         players[playerOnMove].setCards(deck.deal(5));
     }
 
+    /**
+     * Sets the index of the starting player.
+     *
+     * @param index index of the player to start
+     */
+    @Override
     public void setStartingPlayer(int index) {
         this.playerOnMove = index;
     }
 
-
     /**
      * First player chooses 2 cards that he has to throw away after he chose the trump.
      */
+    @Override
     public void throwAwayCards() {
         Player current = players[playerOnMove];
         if (current instanceof HumanPlayer) {
@@ -144,22 +157,22 @@ public class Table implements TableInterface {
     }
 
     /**
-     * Check if card is high value (10 or Ace)
-     * @param card
-     * @return
+     * Checks if a card is considered a high-value card (Ace or Ten).
+     *
+     * @param card the card to check
+     * @return true if high-value, false otherwise
      */
     private boolean isHighValueCard(Card card) {
         int rank = card.getRank();
-        // Assuming Ace = 14, Ten = 10
         return rank == Card.ACE || rank == Card.TEN;
     }
 
     /**
-     * Play one round of trick.
-     * Players rotate and every one play card from his hand.
-     * Round of trick ends after every player played card.
+     * Conducts a full round of play (trick), allowing each player to play one card.
+     * Validates card play rules and determines the winner.
      * Winner of this trick is determined and this player starts first in next round.
      */
+    @Override
     public void playTrick() {
         Trick trick = new Trick();
 
@@ -180,7 +193,7 @@ public class Table implements TableInterface {
                 correctlyPlayedCard = checkPlayedCard(currentPlayer.getHand(), card, trick);
                 if (!correctlyPlayedCard) {
                     if( currentPlayer instanceof HumanPlayer ) {
-                        ioHandler.printError( "Stop cheating!"); // for now only human is printed to pick new index, bots should be designed in a way not to randomly pick index until they get the correct one
+                        ioHandler.printError( "Stop cheating!");
                     }
                     card = currentPlayer.playCard();
                 }
@@ -189,7 +202,7 @@ public class Table implements TableInterface {
             // Remove the played card from hand of player
             currentPlayer.confirmPlayedCard(card);
 
-            ioHandler.printPlayedCard(currentPlayer, card); // always play what was played
+            ioHandler.printPlayedCard(currentPlayer, card);
 
             // Check for marriage after playing a card
             if (card.getRank() == Card.KING || card.getRank() == Card.HORNIK) {
@@ -197,7 +210,6 @@ public class Table implements TableInterface {
                 int counterpartRank = (card.getRank() == Card.KING) ? Card.HORNIK : Card.KING;
 
                 final int suit = card.getSuit();
-                //final int rank = counterpartRank;
                 boolean hasPair = remainingCards.stream().anyMatch(c -> c.getSuit() == suit && c.getRank() == counterpartRank);
                 if (hasPair) {
                     int marriagePoints = (card.getSuit() == trump.getSuit()) ? 40 : 20;
@@ -217,10 +229,11 @@ public class Table implements TableInterface {
     }
 
     /**
-     * Function that finds the winner of trick
-     * sets the winner as player who will start next trick
-     * prints informations about the winner and trick value.
-     * @param trick
+     * Determines the winner of the trick and awards it.
+     * Handles bonus points for the last trick.
+     *
+     * @param trick the trick that was played
+     * @param isLastTrick true if this is the final trick
      */
     private void determineWinner(Trick trick, boolean isLastTrick) {
         // Determine winner of trick
@@ -236,7 +249,8 @@ public class Table implements TableInterface {
         }
         ioHandler.printSeparator();
 
-        winner.addTrick(trick); // The player who won this trick will take it
+        // The player who won this trick will take it
+        winner.addTrick(trick);
         // The player who wins the trick should start the new one.
         setPlayerOnMove(winner);
     }
@@ -254,19 +268,14 @@ public class Table implements TableInterface {
     }
 
     /**
-     * Check if the card played by a player corresponds to rules of the game(color)
-     * @param hand of player who played the card
-     * @param card which player played
-     * @param trick rest of the trick which was played
-     * @return boolean  if card was played correctly
+     * Validates whether a card was legally played according to game rules.
+     *
+     * @param hand the player's current hand
+     * @param card the card being played
+     * @param trick the current trick state
+     * @return true if the play is legal, false otherwise
      */
     private boolean checkPlayedCard(Hand hand, Card card, Trick trick) {
-        // Ak uz hrac predomnou prebil stych trumfom nemusim zahrat vyssiu kartu ako je prva karta v stychu, pretoze ajtak by som nevyhral
-        // Farbu vsak musim priznat vzdy ajkeby som stych nemal vyhrat
-        // Ak nemam ako prebit stych ale mam vyssiu kartu ako druha najvyssia v stychu nemusim zahrat prave ju
-        // ak mam vyssiu kartu musim prebit cely trick
-        // ajkeby som nechcel prebit tromfom tak musim
-
         if (trick.getFirstCard() == null) {
             return true; // First to play, no rules apply
         }
@@ -308,7 +317,6 @@ public class Table implements TableInterface {
         }
 
         // Rule 3: If can't follow suit and has trump, must do it
-        // musi zahrat trumf ajkeby nim nevyhra stych pretoze uz dal niekto silnejsi trumf
         boolean playedTrump = card.getSuit() == trumpSuit;
         boolean canWinWithTrump = false;
         for (Card c : playerCards) {
@@ -328,15 +336,29 @@ public class Table implements TableInterface {
         return true;
     }
 
+    /**
+     * Rotates the active player index to the next one in the sequence.
+     */
+    @Override
     public void rotatePlayers() {
         playerOnMove = (playerOnMove + 1) % players.length;
     }
 
+    /**
+     * Prompts the current player to choose the trump suit.
+     */
+    @Override
     public void chooseTrump() {
         Player p = players[playerOnMove];
         this.trump = p.chooseTrump();
     }
 
+    /**
+     * Checks if the game has ended (i.e., all players have no cards left).
+     *
+     * @return true if game is over, false otherwise
+     */
+    @Override
     public boolean end() {
         for (Player player : players) {
             if (!player.getHand().getCards().isEmpty()) {
@@ -346,6 +368,10 @@ public class Table implements TableInterface {
         return true; // All players have no cards left
     }
 
+    /**
+     * Shuffles the deck and resets its state.
+     */
+    @Override
     public void shuffleCards() {
         deck.reset();
         deck.shuffle();

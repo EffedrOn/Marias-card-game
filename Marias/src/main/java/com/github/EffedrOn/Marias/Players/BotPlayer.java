@@ -6,18 +6,39 @@ import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents a bot (automatic) player in the Marias card game.
+ * <p>
+ * The bot makes decisions randomly, but within the constraints of valid game rules.
+ * It selects cards to play and chooses trump using random logic. This class simulates
+ * automated gameplay for non-human participants.
+ * </p>
+ *
+ * @author Simon Fabus
+ * @version 1.0
+ * @since 2025-03-29
+ */
 public class BotPlayer extends Player {
-    // The BotPlayer should play randomly based on the rules
-    // That means he will choose its actions randomly but only from the set of actions he can do in correspondence with rules of game
+    /** IO handler used for logging bot actions. */
     IOHandler ioHandler;
+
+    /**
+     * Constructs a new bot player with the given name and IO handler.
+     *
+     * @param name the name of the bot player
+     * @param ioHandler the IO handler used to print bot actions
+     */
     public BotPlayer(String name, IOHandler ioHandler) {
         super(name);
         this.ioHandler = ioHandler;
     }
 
-    public void getBet() {
-        // here should be only the raising of the whole game not betting;
-    }
+    /**
+     * Randomly selects a card from the bot's hand to play.
+     *
+     * @return the card selected to be played
+     * @throws IllegalStateException if the bot has no cards left to play
+     */
     @Override
     public Card playCard() {
         Random rand = new Random();
@@ -29,19 +50,18 @@ public class BotPlayer extends Player {
         return cards.get(idx);
     }
 
+    /**
+     * Randomly selects a trump card from the bot's hand.
+     * Prints the selected trump suit using the IO handler.
+     *
+     * @return the selected trump card
+     */
     public Card chooseTrump() {
         ioHandler.printInfo(name + " is choosing the trump...");
-        /*
-        List<Card> crds = hand.getCards();
-        System.out.println("Cards from which bot choose trump");
-        for (Card crd : crds) {
-            System.out.print(crd + " ");
-        }
-        System.out.println();
-         */
+
         Card trump = hand.getRandomCard();
-        //System.out.println("chosen trump : " + trump.toString());
         ioHandler.printInfo(name + " chose " + Card.SUIT_SYMBOLS[trump.getSuit()] + " as trump.");
+
         return trump;
     }
 }
