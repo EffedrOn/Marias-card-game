@@ -1,0 +1,4 @@
+USER DOCUMENTATION
+Mariáš card game implementation
+
+

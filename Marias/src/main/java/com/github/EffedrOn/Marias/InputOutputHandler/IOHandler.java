@@ -4,7 +4,6 @@ import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.Hand;
 import com.github.EffedrOn.Marias.Players.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 

@@ -5,6 +5,7 @@ import com.github.EffedrOn.Marias.Hand;
 import com.github.EffedrOn.Marias.Trick;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -89,7 +90,53 @@ public abstract class Player implements PlayerInterface {
     public void adjustBank(int payoff) {
         this.bank += payoff;
     }
+
     public int getBank() {
         return this.bank;
+    }
+
+    public void throwAwayTwoCardsAutomatically(int trumpSuit) {
+        List<Card> cards = hand.getCards();
+
+        // Filter out high-value cards (Ace and 10)
+        List<Card> discardable = cards.stream()
+                .filter(c -> c.getSuit() != trumpSuit)
+                .sorted(Comparator.comparingInt(Card::getRank))
+                .toList();
+
+        // If fewer than 2 discardable cards, fall back to lowest overall
+        if (discardable.size() < 2) {
+            discardable = cards.stream()
+                    .sorted(Comparator.comparingInt(Card::getRank))
+                    .toList();
+        }
+
+        /*
+        System.out.println("All cards:");
+        for (Card c : cards) {
+            System.out.print(c.toString() + " ");
+        }
+        System.out.println();
+        for (Card card : discardable) {
+            System.out.print(card.toString() + " ");
+        }
+        System.out.println();
+         */
+        Card first = discardable.get(0);
+        Card second = discardable.get(1);
+        /*
+        System.out.println("first and second cards to remove");
+        System.out.println(first.toString() + " " + second.toString());
+        */
+        hand.removeCard(first);
+        hand.removeCard(second);
+        /*
+        List<Card> crds = hand.getCards();
+        System.out.println("Hand after removing 2 cards");
+        for (Card card : crds) {
+            System.out.print(card.toString() + " ");
+        }
+        System.out.println();
+         */
     }
 }

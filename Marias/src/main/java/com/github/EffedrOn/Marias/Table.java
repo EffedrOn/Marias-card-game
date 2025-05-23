@@ -68,67 +68,76 @@ public class Table implements TableInterface {
         ioHandler.printInfo("Dealing Cards");
 
         // mozno radsej rozdat 7-5-5 a v dealFirstPlayer rozdat zvysok takze by sa to volalo dealSecond alebo nieco take
-        player1.setCards(deck.deal(7));
-        player2.setCards(deck.deal(10));
-        player3.setCards(deck.deal(10));
-    }
-
-    public void setStartingPlayer(int index) {
-        this.playerOnMove = index;
+        players[playerOnMove].setCards(deck.deal(7));
+        players[(playerOnMove + 1) % 3].setCards(deck.deal(10));
+        players[(playerOnMove + 2) % 3].setCards(deck.deal(10));
     }
 
     /**
      * Deal the remaining 5 cards to first player, in second round of dealing.
      */
     public void dealFirstPlayer() {
-        player1.setCards(deck.deal(5));
+        players[playerOnMove].setCards(deck.deal(5));
     }
+
+    public void setStartingPlayer(int index) {
+        this.playerOnMove = index;
+    }
+
 
     /**
      * First player chooses 2 cards that he has to throw away after he chose the trump.
      */
     public void throwAwayCards() {
-        List<Card> cards = player1.getHand().getCards();
-        ioHandler.printPrompt("Your hand (choose 2 cards to throw away)");
-        ioHandler.printHand(player1.getHand());
+        Player current = players[playerOnMove];
+        if (current instanceof HumanPlayer) {
+            List<Card> cards = current.getHand().getCards();
+            Card firstCard = null;
+            Card secondCard = null;
+            ioHandler.printPrompt("Your hand (choose 2 cards to throw away)");
+            ioHandler.printHand(current.getHand());
 
-        int firstIndex = -1;
-        int secondIndex = -1;
+            int firstIndex = -1;
+            int secondIndex = -1;
 
-        while (true) {
-            // Until the player chooses 2 correct cards to throw away he has to choose again.
-            try {
-                firstIndex = ioHandler.readCardIndex("Enter index of the FIRST card to throw away", cards.size());
-                secondIndex = ioHandler.readCardIndex("Enter index of the SECOND card to throw away", cards.size());
-                if (firstIndex == secondIndex) {
-                    ioHandler.printError("You cannot throw away the same card twice.");
-                    continue;
+            while (true) {
+                // Until the player chooses 2 correct cards to throw away he has to choose again.
+                try {
+                    firstIndex = ioHandler.readCardIndex("Enter index of the FIRST card to throw away", cards.size());
+                    secondIndex = ioHandler.readCardIndex("Enter index of the SECOND card to throw away", cards.size());
+                    if (firstIndex == secondIndex) {
+                        ioHandler.printError("You cannot throw away the same card twice.");
+                        continue;
+                    }
+
+                    firstCard = cards.get(firstIndex);
+                    secondCard = cards.get(secondIndex);
+
+                    // Check if any card is Ace or 10
+                    if (isHighValueCard(firstCard) || isHighValueCard(secondCard)) {
+                        ioHandler.printError("You cannot throw away an Ace or a 10. Pick different cards.");
+                        continue;
+                    }
+                    break; // input is valid
+                } catch (NumberFormatException e) {
+                    ioHandler.printError("Please enter valid numbers");
                 }
-
-                Card firstCard = cards.get(firstIndex);
-                Card secondCard = cards.get(secondIndex);
-
-                // Check if any card is Ace or 10
-                if (isHighValueCard(firstCard) || isHighValueCard(secondCard)) {
-                    ioHandler.printError("You cannot throw away an Ace or a 10. Pick different cards.");
-                    continue;
-                }
-                break; // input is valid
-            } catch (NumberFormatException e) {
-                ioHandler.printError("Please enter valid numbers");
             }
-        }
 
-        // Remove higher index first to avoid shifting
-        if (firstIndex > secondIndex) {
-            cards.remove(firstIndex);
-            cards.remove(secondIndex);
+            // The case when firstCard or secondCard remains null should not be possible (because of while loop)
+            // Remove higher index first to avoid shifting
+            if (firstIndex > secondIndex) {
+                current.getHand().removeCard(firstCard);
+                current.getHand().removeCard(secondCard);
+            } else {
+                current.getHand().removeCard(secondCard);
+                current.getHand().removeCard(firstCard);
+            }
+            ioHandler.printInfo("Two cards have been thrown away");
         } else {
-            cards.remove(secondIndex);
-            cards.remove(firstIndex);
+            current.throwAwayTwoCardsAutomatically(trump.getSuit());
+            ioHandler.printInfo(current.name + " threw away two cards.");
         }
-
-        ioHandler.printInfo("Two cards have been thrown away");
         ioHandler.printSeparator();
     }
 
@@ -169,7 +178,7 @@ public class Table implements TableInterface {
                 correctlyPlayedCard = checkPlayedCard(currentPlayer.getHand(), card, trick);
                 if (!correctlyPlayedCard) {
                     if( currentPlayer instanceof HumanPlayer ) {
-                        ioHandler.printMessage( "Stop cheating!"); // for now only human is printed to pick new index, bots should be designed in a way not to randomly pick index until they get the correct one
+                        ioHandler.printError( "Stop cheating!"); // for now only human is printed to pick new index, bots should be designed in a way not to randomly pick index until they get the correct one
                     }
                     card = currentPlayer.playCard();
                 }
@@ -218,8 +227,8 @@ public class Table implements TableInterface {
         Player winner = players[winnerPlayerIndex];
 
         // Informative printout who won each trick
-        ioHandler.printMessage(winner.name + " wins the trick!");
-        ioHandler.printMessage("Trick value: " + trick.getValue());
+        ioHandler.printInfo(winner.name + " wins the trick!");
+        ioHandler.printInfo("Trick value: " + trick.getValue());
         if (isLastTrick) {
             trick.setBonusPoints(10);
             ioHandler.printInfo("Bonus: Last trick! 10 points awarded to " + winner.name);

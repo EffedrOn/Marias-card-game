@@ -26,13 +26,22 @@ public class BotPlayer extends Player {
             throw new IllegalStateException(name + " has no cards to play.");
         }
         int idx = rand.nextInt(cards.size());
-        Card chosen = cards.get(idx);
-        //hand.removeCard(chosen);
-        return chosen;
+        return cards.get(idx);
     }
 
     public Card chooseTrump() {
-        return hand.getRandomCard();
+        ioHandler.printInfo(name + " is choosing the trump...");
+        /*
+        List<Card> crds = hand.getCards();
+        System.out.println("Cards from which bot choose trump");
+        for (Card crd : crds) {
+            System.out.print(crd + " ");
+        }
+        System.out.println();
+         */
+        Card trump = hand.getRandomCard();
+        //System.out.println("chosen trump : " + trump.toString());
+        ioHandler.printInfo(name + " chose " + Card.SUIT_SYMBOLS[trump.getSuit()] + " as trump.");
+        return trump;
     }
-
 }

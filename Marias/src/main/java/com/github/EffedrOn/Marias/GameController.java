@@ -21,15 +21,16 @@ public class GameController {
     private final Player player2;
     private final Player player3;
 
+    private final Player[] allPlayers;
     // Grouping the players based on teams
     private Player soloPlayer;
     private Player[] teamPlayers;
 
-    // Value that game has / what players pay when he lose
+    // Value that game has / what players pay when he loose
     private static final int PAYOFF_AMOUNT = 2; // maybe it would be good to have this in lictator and i will take it out from it.
     // Or i could just licitate inside the GameController class which will change the internal variable PAYOFF_AMOUNT.
     // mozno by mala byt instancia comparatoru tu
-
+    private int startingPlayerIndex = 0;
     /**
      * Constructor
      */
@@ -40,7 +41,9 @@ public class GameController {
         this.player2 = new BotPlayer("Bot1", this.ioHandler);
         this.player3 = new BotPlayer("Bot2", this.ioHandler);
 
-        setupTeams(player1, player2, player3);
+        this.allPlayers = new Player[]{player1, player2, player3};
+
+        setupTeams(startingPlayerIndex);
 
         ioHandler.printInfo("Human player created");
         ioHandler.printInfo("Bot1 player created");
@@ -49,9 +52,9 @@ public class GameController {
         this.table = new Table(ioHandler, player1, player2, player3);
     }
 
-    private void setupTeams(Player player1, Player player2, Player player3) {
-        this.soloPlayer = player1;
-        this.teamPlayers = new Player[]{player2, player3};
+    private void setupTeams(int startIndex) {
+        soloPlayer = allPlayers[startIndex];
+        teamPlayers = new Player[]{allPlayers[(startIndex + 1) % 3], allPlayers[(startIndex + 2) % 3]};
     }
 
     private void determineGameWinner() {
@@ -69,7 +72,7 @@ public class GameController {
         // Bank/payoff logic and letting user know who wins.
         if (soloPlayerScore > teamScore) {
             //ioHandler.printMessage("You won!"); // tu bude tiez treba checknut ci je human naozaj soloPlayer
-            ioHandler.printMessage("------------Solo player " + soloPlayer.name + " WINS!-------------");
+            ioHandler.printMessage("-------------Solo player " + soloPlayer.name + " WINS!---------------");
             // Solo wins, team players pay
             for (Player teamPlayer : teamPlayers) {
                 teamPlayer.adjustBank(-PAYOFF_AMOUNT);
@@ -92,7 +95,6 @@ public class GameController {
         ioHandler.printSeparator();
 
         // Check if any player has gone bankrupt
-        Player[] allPlayers = new Player[]{player1, player2, player3};
         for (Player p : allPlayers) {
             if (p.getBank() <= 0) {
                 ioHandler.printMessage("!!! " + p.name + " has gone bankrupt with " + p.getBank() + " cents !!!");
@@ -144,11 +146,15 @@ public class GameController {
             player1.resetMarriagePoints();
             player2.resetMarriagePoints();
             player3.resetMarriagePoints();
+
+            startingPlayerIndex = (startingPlayerIndex + 1) % 3;
+            setupTeams(startingPlayerIndex);
         }
     }
 
     private void startRound() {
-        table.setStartingPlayer(0); // 0 = Human player starts round
+        //table.setStartingPlayer(0); // 0 = Human player starts round
+        table.setStartingPlayer(startingPlayerIndex);
         // Players should choose what value will the game be
 
         table.shuffleCards();
@@ -158,7 +164,6 @@ public class GameController {
 
         table.chooseTrump(); // Mozno este pridat ze hrac moze zavolit z ludu, t.j ze vyberie sa random karta z talonu 5 kariet rozdanych v dealFirstPlayer()
         table.dealFirstPlayer(); // Deal first player rest of the cards
-
         table.throwAwayCards();// Ask First player to choose 2 cards to throw away
     }
 
