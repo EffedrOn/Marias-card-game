@@ -3,6 +3,11 @@ package com.github.EffedrOn.Marias.Game;
 import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.Player;
 
+/**
+ * This class represents whole game as an object.
+ * Players lives outside of this class and they can join it. Table is initialized here, because game without table would not make sense.
+ *
+ */
 public class Game {
     private final GameController gameController;
     private final IOHandler ioHandler;
@@ -22,7 +27,7 @@ public class Game {
         ioHandler.printInfo("Bot2 player entered the game");
 
         this.table =  new Table(ioHandler, player1, player2, player3);
-        // I think its a good idea to have instance of gameController in Game class, because i could create other games for example
+        // I think it is a good idea to have instance of gameController in Game class, because i could create other games for example
         this.gameController = new GameController(player1, player2, player3, ioHandler, this.table);
     }
 

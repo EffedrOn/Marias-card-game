@@ -4,9 +4,9 @@ import com.github.EffedrOn.Marias.InputOutputHandler.IOHandler;
 import com.github.EffedrOn.Marias.Players.Player;
 
 /**
- * Class responsible for whole game logic, that decides who is on turn
+ * Class responsible for whole game logic, that decides who is on turn, who won, who lost, who went bankrupt...
  * This class handle main game logic.
- * Here players and table lives.
+ * .
  * @author Simon Fabus
  * @version 1.0
  * @since 2025-03-29
