@@ -4,18 +4,22 @@ import com.github.EffedrOn.Marias.DeckOfCards.Card;
 import com.github.EffedrOn.Marias.Hand;
 import com.github.EffedrOn.Marias.Players.Player;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
- * Class handling reading and writing with scanner.
- * User Interface and its visual design is mainly being constructed by this class.
+ * Handles user input and output in the CLI version of the Marias card game.
+ * This class manages printing prompts, game information, player actions, errors, and other game messages.
+ * It also provides methods to read user input from the console.
+ * <p>
+ * The interface is constructed using this class, focusing on clarity and consistent formatting
+ * for user experience during gameplay.
+ * </p>
+ *
  * @author Simon Fabus
  * @version 1.0
  * @since 2025-03-29
  */
 public class IOHandler implements IOHandlerInterface {
-    // It would be good to always show the player what color is triumph because its easy to forget.
     private final Scanner scanner;
 
     public IOHandler() {
@@ -24,7 +28,6 @@ public class IOHandler implements IOHandlerInterface {
 
     // Basic input method
     public String readLine(String prompt) {
-        //print(prompt);
         printPrompt(prompt);
         return scanner.nextLine();
     }
@@ -57,10 +60,6 @@ public class IOHandler implements IOHandlerInterface {
     public void printGameOver() {
         printMessage("--------------------Game Over----------------------");
 
-    }
-    // General print helpers
-    public void print(String message) {
-        System.out.print(message);
     }
 
     public void println(String message) {
@@ -113,25 +112,4 @@ public class IOHandler implements IOHandlerInterface {
             }
         }
     }
-
-    // List printing utility
-    public <T> void printList(List<T> items) {
-        if (items == null || items.isEmpty()) {
-            printInfo("No items to display.");
-        } else {
-            for (int i = 0; i < items.size(); i++) {
-                println((i + 1) + ". " + items.get(i).toString());
-            }
-        }
-    }
-
-    // Menu printing
-    public void printMenu(String title, List<String> options) {
-        println("==== " + title + " ====");
-        for (int i = 0; i < options.size(); i++) {
-            println((i + 1) + ". " + options.get(i));
-        }
-        printSeparator();
-    }
-
 }

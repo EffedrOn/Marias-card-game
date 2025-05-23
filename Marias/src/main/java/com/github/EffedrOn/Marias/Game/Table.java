@@ -52,7 +52,7 @@ public class Table implements TableInterface {
         this.deck = new Deck();
         ioHandler.printInfo("Deck created");
 
-        playerOnMove = 0;            // Zatial bude zacinat vzdy human player
+        playerOnMove = 0;
         ioHandler.printInfo("End of Table initialization");
     }
 
@@ -197,15 +197,14 @@ public class Table implements TableInterface {
                 int counterpartRank = (card.getRank() == Card.KING) ? Card.HORNIK : Card.KING;
 
                 final int suit = card.getSuit();
-                final int rank = counterpartRank;
-                boolean hasPair = remainingCards.stream().anyMatch(c -> c.getSuit() == suit && c.getRank() == rank);
+                //final int rank = counterpartRank;
+                boolean hasPair = remainingCards.stream().anyMatch(c -> c.getSuit() == suit && c.getRank() == counterpartRank);
                 if (hasPair) {
                     int marriagePoints = (card.getSuit() == trump.getSuit()) ? 40 : 20;
                     currentPlayer.addMarriagePoints(marriagePoints);
                     ioHandler.printMarriage(currentPlayer, card, marriagePoints, card.getSuit() == trump.getSuit());
                 }
             }
-
 
             trick.addCard(card, playerOnMove);
             // Set the playerOnMove for the next one in order
@@ -240,7 +239,6 @@ public class Table implements TableInterface {
         winner.addTrick(trick); // The player who won this trick will take it
         // The player who wins the trick should start the new one.
         setPlayerOnMove(winner);
-
     }
     /**
      * Set player who won the trick to start in next round
@@ -352,5 +350,4 @@ public class Table implements TableInterface {
         deck.reset();
         deck.shuffle();
     }
-
 }

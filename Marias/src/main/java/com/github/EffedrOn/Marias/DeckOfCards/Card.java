@@ -59,5 +59,4 @@ public class Card {
     public String toString() {
         return RANK_SYMBOLS[rank] + SUIT_SYMBOLS[suit];
     }
-
 }

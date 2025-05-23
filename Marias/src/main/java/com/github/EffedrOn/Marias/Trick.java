@@ -24,6 +24,7 @@ public class Trick {
     public void setBonusPoints(int bonus) {
         this.bonusPoints = bonus;
     }
+
     public int getValue() {
         int sum = 0;
         for (Card c : cards) {
@@ -69,7 +70,6 @@ public class Trick {
         return playerIndexes[winningCardIndex];
     }
 
-
     public Card getFirstCard() {
         return cards[0];
     }
@@ -94,7 +94,6 @@ public class Trick {
     }
 
     // Get highest card in the trick overall
-    // Treba zohladnit ze najsilnejsie su trumfy
     public Card getHighestCard(Card trump) {
         Card highest = null;
         CardComparator comparator = new CardComparator(trump.getSuit());

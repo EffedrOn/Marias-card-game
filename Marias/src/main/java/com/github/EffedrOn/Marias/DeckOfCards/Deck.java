@@ -62,6 +62,7 @@ public class Deck implements DeckInterface {
         Collections.shuffle(cards);
     }
 
+    // Nepouzivam
     @Override
     public void takeOutCard() {
         if (!cards.isEmpty()) {
