@@ -17,6 +17,7 @@ public abstract class Player implements PlayerInterface {
     protected Hand hand;
     public String name;
     protected int score = 0;
+    protected int marriagePoints = 0;
     protected int bank;
     protected List<Trick> wonTricks = new ArrayList<>();
 
@@ -38,6 +39,17 @@ public abstract class Player implements PlayerInterface {
         return this.score;
     }
 
+    public void addMarriagePoints(int points) {
+        this.marriagePoints += points;
+    }
+
+    public int getMarriagePoints() {
+        return this.marriagePoints;
+    }
+
+    public void resetMarriagePoints() {
+        this.marriagePoints = 0;
+    }
     /**
       * Add cards into players hand
       */

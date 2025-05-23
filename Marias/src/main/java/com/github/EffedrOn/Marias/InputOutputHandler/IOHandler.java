@@ -25,7 +25,8 @@ public class IOHandler implements IOHandlerInterface {
 
     // Basic input method
     public String readLine(String prompt) {
-        print(prompt);
+        //print(prompt);
+        printPrompt(prompt);
         return scanner.nextLine();
     }
 
@@ -47,13 +48,17 @@ public class IOHandler implements IOHandlerInterface {
     }
 
     public void printPlayedCard(Player player, Card card) {
-        printMessage(player.name + "played: " + card);
+        printMessage(player.name + " played: " + card);
     }
 
     public void printSeparator() {
-        println("--------------------------------------------------");
+        println("---------------------------------------------------");
     }
 
+    public void printGameOver() {
+        printMessage("--------------------Game Over----------------------");
+
+    }
     // General print helpers
     public void print(String message) {
         System.out.print(message);
@@ -63,10 +68,14 @@ public class IOHandler implements IOHandlerInterface {
         System.out.println(message);
     }
 
-    public String readInput() {
-        return scanner.nextLine();
+    public void printMarriage(Player player, Card card, int marriagePoints, boolean isTrumpSuit) {
+        String suitSymnbol = Card.SUIT_SYMBOLS[card.getSuit()];
+        if(!isTrumpSuit) {
+            printMessage(player.name + " plays a MARRIAGE in " + suitSymnbol + " suit" + " for " + marriagePoints + " points!");
+        } else{
+            printMessage(player.name + " plays a MARRIAGE " + " in trump suit " + suitSymnbol + " for " + marriagePoints + " points!");
+        }
     }
-
 
     public void printHand(Hand hand) {
         for (int i = 0; i < hand.getCards().size(); i++) {
@@ -86,6 +95,9 @@ public class IOHandler implements IOHandlerInterface {
          */
     }
 
+    public String readInput() {
+        return scanner.nextLine();
+    }
 
     public int readCardIndex(String prompt, int maxIndex) {
         while (true) {

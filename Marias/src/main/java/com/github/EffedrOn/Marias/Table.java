@@ -29,7 +29,6 @@ public class Table implements TableInterface {
     private final Player[] players;
     private final Deck deck;
     private int playerOnMove;
-    private Licitator licitator;
     private Card trump;
 
     /**
@@ -52,9 +51,7 @@ public class Table implements TableInterface {
         ioHandler.printInfo("Deck created");
 
         playerOnMove = 0;            // Zatial bude zacinat vzdy human player
-        licitator = new Licitator(); // tu si budu hraci vyberat typ hry a sadzbu
         ioHandler.printInfo("End of Table initialization");
-        ioHandler.printSeparator();
     }
 
     /**
@@ -70,21 +67,10 @@ public class Table implements TableInterface {
         // It should be somehow marked which player deals the cards.
         ioHandler.printInfo("Dealing Cards");
 
+        // mozno radsej rozdat 7-5-5 a v dealFirstPlayer rozdat zvysok takze by sa to volalo dealSecond alebo nieco take
         player1.setCards(deck.deal(7));
         player2.setCards(deck.deal(10));
         player3.setCards(deck.deal(10));
-
-        /*
-        // Printout of dealed cards to players
-        for (Player player : players) {
-            Hand phand = player.getHand();
-            List<Card> pards = phand.getCards();
-            System.out.println("Player" + player.name + "cards");
-            for (Card card : pards) {
-                System.out.println(card.toString());
-            }
-        }
-         */
     }
 
     public void setStartingPlayer(int index) {
@@ -99,7 +85,7 @@ public class Table implements TableInterface {
     }
 
     /**
-     * First player chooses 2 cards that he has to throw away after he cose the trump.
+     * First player chooses 2 cards that he has to throw away after he chose the trump.
      */
     public void throwAwayCards() {
         List<Card> cards = player1.getHand().getCards();
@@ -110,7 +96,7 @@ public class Table implements TableInterface {
         int secondIndex = -1;
 
         while (true) {
-            // Until the player chooses correct 2 cards to throw away he has to choose again.
+            // Until the player chooses 2 correct cards to throw away he has to choose again.
             try {
                 firstIndex = ioHandler.readCardIndex("Enter index of the FIRST card to throw away", cards.size());
                 secondIndex = ioHandler.readCardIndex("Enter index of the SECOND card to throw away", cards.size());
@@ -143,6 +129,7 @@ public class Table implements TableInterface {
         }
 
         ioHandler.printInfo("Two cards have been thrown away");
+        ioHandler.printSeparator();
     }
 
     /**
@@ -152,7 +139,7 @@ public class Table implements TableInterface {
      */
     private boolean isHighValueCard(Card card) {
         int rank = card.getRank();
-        // Assuming Ace = 14, Ten = 10 (adjust if your game uses different values)
+        // Assuming Ace = 14, Ten = 10
         return rank == Card.ACE || rank == Card.TEN;
     }
 
@@ -188,18 +175,34 @@ public class Table implements TableInterface {
                 }
             }
 
-            // remove the played card from hand of player
+            // Remove the played card from hand of player
             currentPlayer.confirmPlayedCard(card);
 
-            ioHandler.printPlayedCard(currentPlayer, card);
-            trick.addCard(card, playerOnMove);
+            ioHandler.printPlayedCard(currentPlayer, card); // always play what was played
 
+            // Check for marriage after playing a card
+            if (card.getRank() == Card.KING || card.getRank() == Card.HORNIK) {
+                List<Card> remainingCards = currentPlayer.getHand().getCards();
+                int counterpartRank = (card.getRank() == Card.KING) ? Card.HORNIK : Card.KING;
+
+                final int suit = card.getSuit();
+                final int rank = counterpartRank;
+                boolean hasPair = remainingCards.stream().anyMatch(c -> c.getSuit() == suit && c.getRank() == rank);
+                if (hasPair) {
+                    int marriagePoints = (card.getSuit() == trump.getSuit()) ? 40 : 20;
+                    currentPlayer.addMarriagePoints(marriagePoints);
+                    ioHandler.printMarriage(currentPlayer, card, marriagePoints, card.getSuit() == trump.getSuit());
+                }
+            }
+
+
+            trick.addCard(card, playerOnMove);
             // Set the playerOnMove for the next one in order
             rotatePlayers();
         }
 
         // Determine winner of the trick
-        boolean isLastTrick = end();
+        boolean isLastTrick = end(); // "Ultimo"
         determineWinner(trick, isLastTrick);
     }
 
@@ -219,7 +222,7 @@ public class Table implements TableInterface {
         ioHandler.printMessage("Trick value: " + trick.getValue());
         if (isLastTrick) {
             trick.setBonusPoints(10);
-            ioHandler.printMessage("Bonus: Last trick! 10 points awarded.");
+            ioHandler.printInfo("Bonus: Last trick! 10 points awarded to " + winner.name);
         }
         ioHandler.printSeparator();
 

@@ -9,11 +9,18 @@
 8. Dorobit ze ak hrac vylozil kartu ktora nie je rovnakej farby ako prva vylozena -> nemoze vyhrat stych. DONE neplati pre trumfy
 9. Skusit upravit bota tak aby predtym ako zahra kartu previedol jednoduchu logiku ci sa mu to oplati alebo nie, a ake karty moze vobec zahrat.
 10. Dorobit branie stychov, a kto na konci vyhrava. DONE
-11. Dorobit hlasku a jej hodnotu. 
+11. Dorobit hlasku a jej hodnotu. Marriage (King+Hornik in the same suit in one player´s hand) trump suit 40 points, other suits 20, 20, 20 points (100 bonus points, 190 maximum score)
 12. Dorobit ze posledny stych ma hodnotu 10 -> nemoze nastat remiza DONE
 13. Dorobit ze hraju 2 hraci proti 1. DONE
 
 14. Ak obrancovia alebo hlavný hráč získa sto bodov, vyplácaná suma sa zdvojnásobuje. toto moze nastat len pri pouziti hlaskovej logiky.
 
 15. Dorobit vyplacanie hry: Budem hrat 	1centoveho, Ak teamovi hraci prehrali farbu zaplatia 2 centy kazdy, ak vyhrali dostanu po 2 centy.  DONE
+16. Osetrit ze Do you want to play another round? (y/n): y to nespadne pri zlom vstupe. DONE staci ze pokial sa nezada spravne "y" tak hra skonci
+17. Prerobit vypisy na krajsie (vizualne).
+
+18. Po spravnosti by sa mali karty rozdavat takto: 7-5-5-5-5-5 in Volený mariáš (the elder hand sets up the trump suit when he has seven cards in hand, after the setting he takes the second part – another five cards, then chooses and puts two cards aside)
+
+19. Porozdelovat metodu checkPlayedcard().
+
 
