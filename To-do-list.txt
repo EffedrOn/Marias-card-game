@@ -13,7 +13,7 @@
 12. Dorobit ze posledny stych ma hodnotu 10 -> nemoze nastat remiza DONE
 13. Dorobit ze hraju 2 hraci proti 1. DONE
 
-14. Ak obrancovia alebo hlavný hráč získa sto bodov, vyplácaná suma sa zdvojnásobuje. 
+14. Ak obrancovia alebo hlavný hráč získa sto bodov, vyplácaná suma sa zdvojnásobuje. toto moze nastat len pri pouziti hlaskovej logiky.
 
-15. Dorobit vyplacanie hry: Budem hrat 	1centoveho, Ak teamovi hraci prehrali farbu zaplatia 2 centy kazdy, ak vyhrali dostanu po 2 centy. 
+15. Dorobit vyplacanie hry: Budem hrat 	1centoveho, Ak teamovi hraci prehrali farbu zaplatia 2 centy kazdy, ak vyhrali dostanu po 2 centy.  DONE
 
