@@ -52,8 +52,6 @@ public class GameController {
         this.teamPlayers = new Player[]{player2, player3};
     }
 
-    // Tu by mohla byt funkcia ktora by bola zodpovedna za to aky typ hry sa hra (Farba, Maly, Velky)
-
     private void determineGameWinner() {
         int  soloPlayerScore = this.soloPlayer.countTricks();
         int  teamPlayer0Score = this.teamPlayers[0].countTricks();
@@ -63,18 +61,35 @@ public class GameController {
         ioHandler.printMessage(teamPlayers[0].name + " score: " + teamPlayer0Score);
         ioHandler.printMessage(teamPlayers[1].name + " score: " + teamPlayer1Score);
 
-
         int teamScore = teamPlayer0Score + teamPlayer1Score;
 
         ioHandler.printMessage("Team players " + teamPlayers[0].name + " and " + teamPlayers[1].name + " scored: " + teamScore);
 
+        // --- Bank/payoff logic ---
+        int payoffAmount = 2;
+
         if (soloPlayerScore > teamScore) {
             ioHandler.printMessage("You won!");
             ioHandler.printMessage("Solo player " + soloPlayer.name + " WINS!");
+            // Solo wins, team players pay
+            for (Player teamPlayer : teamPlayers) {
+                teamPlayer.adjustBank(-payoffAmount);
+                soloPlayer.adjustBank(payoffAmount);
+            }
         } else {
             ioHandler.printMessage("Team won!");
             ioHandler.printMessage("You lost!");
+            // Team wins, solo player pays each team player
+            soloPlayer.adjustBank(-payoffAmount * teamPlayers.length);
+            for (Player teamPlayer : teamPlayers) {
+                teamPlayer.adjustBank(payoffAmount);
+            }
         }
+
+        // Show updated banks
+        ioHandler.printMessage(soloPlayer.name + " bank: " + soloPlayer.getBank() + " cents");
+        ioHandler.printMessage(teamPlayers[0].name + " bank: " + teamPlayers[0].getBank() + " cents");
+        ioHandler.printMessage(teamPlayers[1].name + " bank: " + teamPlayers[1].getBank() + " cents");
         ioHandler.printSeparator();
     }
     /**

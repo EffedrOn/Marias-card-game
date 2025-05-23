@@ -17,11 +17,13 @@ public abstract class Player implements PlayerInterface {
     protected Hand hand;
     public String name;
     protected int score = 0;
+    protected int bank;
     protected List<Trick> wonTricks = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
         this.hand = new Hand();
+        this.bank = 20; // initially player beggins with 20 cents in his account
     }
 
     /**
@@ -68,6 +70,14 @@ public abstract class Player implements PlayerInterface {
     }
 
     public void clearTricks() {
-        wonTricks.clear();
+        this.wonTricks.clear();
+        this.score = 0;
+    }
+
+    public void adjustBank(int payoff) {
+        this.bank += payoff;
+    }
+    public int getBank() {
+        return this.bank;
     }
 }

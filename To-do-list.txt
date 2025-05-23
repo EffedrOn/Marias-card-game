@@ -4,9 +4,16 @@
 4. Porozdelovat metodu playTrick v Table aby nebola tak neunosne dlha ale radsej volala viacej mensich funkcii. Asi prave play one round by mohla byt jedna metoda.
    Dalsia tiez na rozhodnutie kto vyhral stych.
 5. Dorobit spravne rozdavanie: 1. hrac 7 kariet a 5 bokom, nasledne zahodit 2 do talona, 2. hrac 12 kariet a rovnako aj 3. hrac. DONE
-6. Dorobit porovnavanie kariet ked niesu rovnakej farby, trumfove atd. 
+6. Dorobit porovnavanie kariet ked niesu rovnakej farby, trumfove atd. DONE
 7. Doriesit aby program neodletel na zlom inpute uzivatela. DONE pre zly index
-8. Dorobit ze ak hrac vylozil kartu ktora nie je rovnakej farby ako prva vylozena -> nemoze vyhrat stych.
+8. Dorobit ze ak hrac vylozil kartu ktora nie je rovnakej farby ako prva vylozena -> nemoze vyhrat stych. DONE neplati pre trumfy
 9. Skusit upravit bota tak aby predtym ako zahra kartu previedol jednoduchu logiku ci sa mu to oplati alebo nie, a ake karty moze vobec zahrat.
 10. Dorobit branie stychov, a kto na konci vyhrava. DONE
-11. Dorobit hlasku a jej hodnotu.
+11. Dorobit hlasku a jej hodnotu. 
+12. Dorobit ze posledny stych ma hodnotu 10 -> nemoze nastat remiza DONE
+13. Dorobit ze hraju 2 hraci proti 1. DONE
+
+14. Ak obrancovia alebo hlavný hráč získa sto bodov, vyplácaná suma sa zdvojnásobuje. 
+
+15. Dorobit vyplacanie hry: Budem hrat 	1centoveho, Ak teamovi hraci prehrali farbu zaplatia 2 centy kazdy, ak vyhrali dostanu po 2 centy. 
+
